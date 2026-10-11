@@ -1,0 +1,209 @@
+﻿@model LIBRARY_PLUS.Models.Auteur
+
+@{
+    ViewData["Title"] = "Modifier un auteur";
+}
+
+<style>
+    .form-page {
+        max-width: 760px;
+        margin: 0 auto;
+    }
+
+    .form-header {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 28px;
+    }
+
+    .back-link {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #0f172a;
+        text-decoration: none;
+        font-size: 22px;
+        transition: 0.2s;
+    }
+
+        .back-link:hover {
+            background: #e2e8f0;
+            color: #0f172a;
+        }
+
+    .form-title {
+        font-size: 30px;
+        font-weight: 700;
+        color: #0f172a;
+        margin: 0;
+    }
+
+    .form-subtitle {
+        color: #64748b;
+        font-size: 16px;
+        margin: 4px 0 0;
+    }
+
+    .form-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        padding: 38px 40px;
+    }
+
+    .form-label {
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 10px;
+        font-size: 15px;
+    }
+
+    .required {
+        color: #dc2626;
+    }
+
+    .modern-input {
+        height: 58px;
+        border: 1px solid #dbe2ea;
+        border-radius: 10px;
+        padding: 0 20px;
+        font-size: 16px;
+        color: #334155;
+        width: 100%;
+    }
+
+        .modern-input:focus {
+            border-color: #213c9b;
+            box-shadow: 0 0 0 4px rgba(33,60,155,0.08);
+            outline: none;
+        }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+    }
+
+    .form-divider {
+        border-top: 1px solid #e2e8f0;
+        margin: 28px 0 32px;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 18px;
+    }
+
+    .btn-save {
+        background: #213c9b;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        padding: 14px 30px;
+        font-weight: 700;
+        font-size: 16px;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+        .btn-save:hover {
+            background: #1d3588;
+            color: white;
+        }
+
+    .btn-cancel {
+        background: white;
+        color: #0f172a;
+        border: 1px solid #dbe2ea;
+        border-radius: 10px;
+        padding: 14px 30px;
+        font-weight: 600;
+        font-size: 16px;
+        text-decoration: none;
+    }
+
+        .btn-cancel:hover {
+            background: #f8fafc;
+            color: #0f172a;
+        }
+
+    .text-danger {
+        font-size: 13px;
+        margin-top: 6px;
+        display: block;
+    }
+
+    @@media(max-width: 800px) {
+        .form-row {
+            grid-template-columns: 1fr;
+            gap: 0;
+        }
+
+        .form-card {
+            padding: 26px;
+        }
+    }
+</style>
+
+<div class="form-page">
+
+    <div class="form-header">
+        <a asp-action="Index" class="back-link">
+            <i class="fa-solid fa-arrow-left"></i>
+        </a>
+
+        <div>
+            <h1 class="form-title">Modifier un auteur</h1>
+            <p class="form-subtitle">Modifiez les informations de l'auteur</p>
+        </div>
+    </div>
+
+    <div class="form-card">
+        <form asp-action="Edit" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <input type="hidden" asp-for="IdAuteur" />
+
+            <div class="form-row">
+                <div class="mb-4">
+                    <label asp-for="Nom" class="form-label">
+                        Nom <span class="required">*</span>
+                    </label>
+                    <input asp-for="Nom" class="modern-input" />
+                    <span asp-validation-for="Nom" class="text-danger"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="Prenom" class="form-label">
+                        Prénom <span class="required">*</span>
+                    </label>
+                    <input asp-for="Prenom" class="modern-input" />
+                    <span asp-validation-for="Prenom" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-divider"></div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-save">
+                    <i class="fa-solid fa-floppy-disk"></i>
+                    Enregistrer
+                </button>
+
+                <a asp-action="Index" class="btn-cancel">Annuler</a>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

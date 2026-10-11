@@ -1,0 +1,332 @@
+﻿<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - LIBRARY_PLUS</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/LIBRARY_PLUS.styles.css" asp-append-version="true" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            background-color: #f5f7fb;
+            font-family: 'Inter' , sans-serif;
+        }
+
+        .app-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #213c9b;
+            color: white;
+            padding: 24px 16px 0;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+        
+        }
+
+        .sidebar-logo {
+            width: 160px;
+            object-fit: contain;
+        }
+
+        .sidebar-brand {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 30px;
+            text-decoration: none;
+        }
+
+        .sidebar-section-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.55);
+            margin: 20px 12px 12px;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        .sidebar-menu {
+            gap: 8px;
+        }
+
+        .sidebar .nav-link {
+            color: rgba(255,255,255,0.82);
+            border-radius: 14px;
+            padding: 13px 15px;
+            margin-bottom: 7px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+            transition: all 0.2s ease;
+        }
+
+            .sidebar .nav-link i {
+                width: 22px;
+                font-size: 17px;
+                text-align: center;
+            }
+
+            .sidebar .nav-link:hover {
+                background-color: rgba(255,255,255,0.12);
+                color: #ffffff;
+                transform: translateX(3px);
+            }
+
+            .sidebar .nav-link.active-link {
+                background: rgba(255,255,255,0.18);
+                color: #ffffff;
+                box-shadow: inset 4px 0 0 #ffffff;
+            }
+
+        .main-content {
+            flex-grow: 1;
+            padding: 24px;
+        }
+
+        .top-header {
+            background-color: white;
+            border-radius: 16px;
+            padding: 16px 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+            .top-header h4 {
+                margin: 0;
+                font-weight: 600;
+                color: #0f172a;
+            }
+
+            .top-header .sub-text {
+                color: #64748b;
+                font-size: 14px;
+            }
+
+        .page-container {
+            background-color: transparent;
+        }
+
+        .footer-custom {
+            margin-top: 30px;
+            color: #64748b;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .sidebar-main {
+            flex: 1;
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+            padding: 18px 0 22px;
+            border-top: 1px solid rgba(255,255,255,0.15);
+        }
+
+        .logout-form {
+            margin: 0;
+        }
+
+        .logout-btn {
+            width: 100%;
+            border: none;
+            background: transparent;
+            color: rgba(255,255,255,0.86);
+            padding: 13px 15px;
+            border-radius: 14px;
+            text-align: left;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            transition: all 0.2s ease;
+        }
+
+            .logout-btn:hover {
+                background: rgba(255,255,255,0.12);
+                color: white;
+                transform: translateX(3px);
+            }
+
+        .admin-profile {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            border-left: 1px solid #e5e7eb;
+            padding-left: 24px;
+        }
+
+        .admin-info {
+            text-align: right;
+            line-height: 1.2;
+        }
+
+        .admin-name {
+            font-weight: 700;
+            color: #0f172a;
+            font-size: 15px;
+        }
+
+        .admin-email {
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        .admin-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #213c9b;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 20px;
+        }
+
+        @@media (max-width: 991px) {
+            .app-layout {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+            }
+
+            .main-content {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    @{
+        var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    }
+
+    <div class="app-layout">
+        <aside class="sidebar">
+            <div class="sidebar-main">
+                <a asp-controller="Dashboard" asp-action="Index" class="sidebar-brand">
+                    <img src="~/images/logo.png" alt="Library Plus Logo" class="sidebar-logo" />
+                </a>
+
+                <div class="sidebar-section-title">Navigation</div>
+
+                <nav class="nav flex-column sidebar-menu">
+
+                    <a class="nav-link @(currentController == "Dashboard" ? "active-link" : "")"
+                       asp-controller="Dashboard" asp-action="Index">
+                        <i class="fa-solid fa-table-columns"></i>
+                        <span>Dashboard</span>
+                    </a>
+
+                    <a class="nav-link @(currentController == "Livres" ? "active-link" : "")"
+                       asp-controller="Livres" asp-action="Index">
+                        <i class="fa-solid fa-book-open"></i>
+                        <span>Livres</span>
+                    </a>
+
+                    <a class="nav-link @(currentController == "Auteurs" ? "active-link" : "")"
+                       asp-controller="Auteurs" asp-action="Index">
+                        <i class="fa-solid fa-user-pen"></i>
+                        <span>Auteurs</span>
+                    </a>
+
+                    <a class="nav-link @(currentController == "Categories" ? "active-link" : "")"
+                       asp-controller="Categories" asp-action="Index">
+                        <i class="fa-solid fa-layer-group"></i>
+                        <span>Catégories</span>
+                    </a>
+
+                    <a class="nav-link @(currentController == "Etudiants" ? "active-link" : "")"
+                       asp-controller="Etudiants" asp-action="Index">
+                        <i class="fa-solid fa-user-graduate"></i>
+                        <span>Étudiants</span>
+                    </a>
+
+                    <a class="nav-link @(currentController == "Reservations" ? "active-link" : "")"
+                       asp-controller="Reservations" asp-action="Index">
+                        <i class="fa-solid fa-bookmark"></i>
+                        <span>Réservations</span>
+                    </a>
+
+                    <a class="nav-link @(currentController == "Emprunts" ? "active-link" : "")"
+                       asp-controller="Emprunts" asp-action="Index">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                        <span>Emprunts</span>
+                    </a>
+
+                </nav>
+            </div>
+
+            <div class="sidebar-bottom">
+                <form asp-controller="Account" asp-action="Logout" method="post" class="logout-form">
+                    <button type="submit" class="logout-btn">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <span>Déconnexion</span>
+                    </button>
+                </form>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="top-header">
+                <div>
+                    <h4>@ViewData["Title"]</h4>
+                    <div class="sub-text">Système de gestion de bibliothèque</div>
+                </div>
+                <div class="admin-profile">
+                    <div class="admin-info">
+                        <div class="admin-name">Admin</div>
+                        <div class="admin-email">@User.Identity?.Name</div>
+                    </div>
+
+                    <div class="admin-avatar">
+                        A
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-container">
+                @RenderBody()
+            </div>
+
+            <div class="footer-custom">
+                &copy; 2026 - LIBRARY_PLUS - Mohamed Amine Mrad
+            </div>
+        </main>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

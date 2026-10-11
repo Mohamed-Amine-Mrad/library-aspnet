@@ -1,0 +1,236 @@
+﻿@model LIBRARY_PLUS.Models.ViewModels.LoginViewModel
+
+@{
+    Layout = null;
+    ViewData["Title"] = "Login";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - Library Plus</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #5b35f5, #a713f4, #f03c9b);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .auth-page {
+            width: 100%;
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 460px;
+            align-items: center;
+            gap: 80px;
+            padding: 60px 10%;
+        }
+
+        .brand-side {
+            color: white;
+        }
+
+        .logo-img {
+            width: 150px;
+            margin-bottom: 20px;
+        }
+
+        .brand-title {
+            font-size: 54px;
+            font-weight: 800;
+            margin: 0;
+        }
+
+            .brand-title span {
+                color: #ffe600;
+            }
+
+        .brand-subtitle {
+            font-size: 22px;
+            margin: 12px 0 30px;
+        }
+
+        .feature {
+            background: rgba(255,255,255,0.13);
+            padding: 18px 22px;
+            border-radius: 12px;
+            margin-bottom: 14px;
+            font-weight: 600;
+        }
+
+        .auth-card {
+            background: rgba(255,255,255,0.92);
+            border-radius: 20px;
+            padding: 42px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.22);
+        }
+
+            .auth-card h2 {
+                margin: 0 0 8px;
+                font-size: 28px;
+                color: #1f2937;
+            }
+
+            .auth-card p {
+                margin-bottom: 28px;
+                color: #64748b;
+            }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 8px;
+        }
+
+        .form-control {
+            width: 100%;
+            height: 48px;
+            border-radius: 10px;
+            border: 1px solid #d8dce5;
+            padding: 0 14px;
+            font-size: 15px;
+            outline: none;
+        }
+
+            .form-control:focus {
+                border-color: #9b1cf2;
+                box-shadow: 0 0 0 3px rgba(155,28,242,0.12);
+            }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .row-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 6px 0 22px;
+            font-size: 14px;
+            color: #64748b;
+        }
+
+            .row-options a {
+                color: #a713f4;
+                text-decoration: none;
+                font-weight: 600;
+            }
+
+        .btn-auth {
+            width: 100%;
+            border: none;
+            height: 52px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 800;
+            background: linear-gradient(90deg, #7b2ff7, #f72c8f);
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(167,19,244,0.28);
+        }
+
+        .bottom-link {
+            text-align: center;
+            margin-top: 24px;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+            .bottom-link a {
+                color: #8b1cf4;
+                font-weight: 800;
+                text-decoration: none;
+            }
+
+        .text-danger {
+            color: #dc2626;
+            font-size: 13px;
+        }
+
+        .validation-summary-errors {
+            color: #dc2626;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        @@media (max-width: 900px) {
+            .auth-page {
+                grid-template-columns: 1fr;
+                gap: 30px;
+                padding: 30px;
+            }
+
+            .brand-title {
+                font-size: 42px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-page">
+
+        <div class="brand-side">
+            <img src="~/images/logo.png" class="logo-img" alt="Library Plus Logo" />
+            <h1 class="brand-title">Library <span>Plus</span></h1>
+            <div class="brand-subtitle">Your next generation digital library</div>
+
+            <div class="feature">📚 Access to thousands of books</div>
+            <div class="feature">🎓 Smart loan management</div>
+            <div class="feature">📊 Statistics and recommendations</div>
+        </div>
+
+        <div class="auth-card">
+            <h2>Welcome!</h2>
+            <p>Login to your account</p>
+
+            <form asp-action="Login" method="post">
+                <div asp-validation-summary="All"></div>
+
+                <div class="form-group">
+                    <label asp-for="Email">Email</label>
+                    <input asp-for="Email" class="form-control" placeholder="your.email@example.com" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Password">Password</label>
+                    <input asp-for="Password" class="form-control" placeholder="********" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                <div class="row-options">
+                    <label style="margin:0;font-weight:600;color:#64748b;">
+                        <input asp-for="RememberMe" />
+                        Remember me
+                    </label>
+                    <a href="#">Forgot password?</a>
+                </div>
+
+                <button type="submit" class="btn-auth">Login</button>
+
+                <div class="bottom-link">
+                    Don’t have an account?
+                    <a asp-action="Register">Create account</a>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+</body>
+</html>

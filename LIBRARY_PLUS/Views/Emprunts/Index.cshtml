@@ -1,0 +1,452 @@
+﻿@model IEnumerable<LIBRARY_PLUS.Models.Emprunt>
+
+@{
+    ViewData["Title"] = "Emprunts";
+    var aujourdHui = DateTime.Today;
+}
+
+<style>
+    .emprunts-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 26px;
+    }
+
+    .emprunts-count {
+        color: #64748b;
+        font-size: 18px;
+        font-weight: 500;
+    }
+
+    .add-emprunt-btn {
+        background: #213c9b;
+        color: white;
+        border-radius: 12px;
+        padding: 13px 24px;
+        text-decoration: none;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+        .add-emprunt-btn:hover {
+            color: white;
+            background: #1d3588;
+        }
+
+    .message-box {
+        border-radius: 12px;
+        padding: 14px 18px;
+        margin-bottom: 18px;
+        font-weight: 600;
+    }
+
+    .message-success {
+        background: #dcfce7;
+        color: #15803d;
+        border: 1px solid #bbf7d0;
+    }
+
+    .message-error {
+        background: #fee2e2;
+        color: #dc2626;
+        border: 1px solid #fecaca;
+    }
+
+    .search-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+
+    .search-input-wrapper {
+        position: relative;
+        max-width: 580px;
+    }
+
+    .search-icon {
+        position: absolute;
+        left: 18px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #64748b;
+        font-size: 18px;
+    }
+
+    .emprunt-search {
+        height: 52px;
+        border: 1px solid #dbe2ea;
+        border-radius: 10px;
+        padding: 0 18px 0 54px;
+        font-size: 16px;
+        color: #334155;
+        width: 100%;
+        background: white;
+    }
+
+        .emprunt-search:focus {
+            outline: none;
+            border-color: #213c9b;
+            box-shadow: 0 0 0 4px rgba(33,60,155,0.08);
+        }
+
+    .table-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        overflow: hidden;
+    }
+
+    .emprunts-table {
+        width: 100%;
+        margin: 0;
+        border-collapse: collapse;
+    }
+
+        .emprunts-table thead {
+            background: #f1f5f9;
+        }
+
+        .emprunts-table th {
+            padding: 18px 30px;
+            color: #64748b;
+            font-weight: 700;
+            font-size: 16px;
+            white-space: nowrap;
+        }
+
+        .emprunts-table td {
+            padding: 22px 30px;
+            color: #475569;
+            font-size: 16px;
+            border-top: 1px solid #e2e8f0;
+            vertical-align: middle;
+        }
+
+    .student-name {
+        color: #0f172a;
+        font-weight: 500;
+    }
+
+    .book-title {
+        color: #475569;
+        font-weight: 500;
+    }
+
+    .date-effective {
+        color: #16a34a;
+        font-weight: 600;
+    }
+
+    .date-empty {
+        color: #64748b;
+    }
+
+    .date-warning {
+        color: #ea580c;
+        font-size: 13px;
+        font-weight: 600;
+        margin-top: 4px;
+    }
+
+    .status-badge {
+        padding: 7px 14px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 700;
+        display: inline-block;
+        white-space: nowrap;
+    }
+
+    .status-current {
+        background: #dbeafe;
+        color: #2563eb;
+        border: 1px solid #bfdbfe;
+    }
+
+    .status-warning {
+        background: #ffedd5;
+        color: #ea580c;
+        border: 1px solid #fed7aa;
+    }
+
+    .status-late {
+        background: #fee2e2;
+        color: #dc2626;
+        border: 1px solid #fecaca;
+    }
+
+    .status-returned {
+        background: #dcfce7;
+        color: #16a34a;
+        border: 1px solid #bbf7d0;
+    }
+
+    .late-text {
+        color: #dc2626;
+        font-size: 13px;
+        font-weight: 600;
+        margin-top: 6px;
+    }
+
+    .actions {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+        .actions a {
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+    .action-view {
+        color: #2563eb;
+    }
+
+    .action-edit {
+        color: #16a34a;
+    }
+
+    .action-delete {
+        color: #dc2626;
+    }
+
+    .return-form {
+        display: inline;
+    }
+
+    .return-btn {
+        border: none;
+        background: #16a34a;
+        color: white;
+        border-radius: 10px;
+        padding: 10px 16px;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+        .return-btn:hover {
+            background: #15803d;
+        }
+
+    .returned-label {
+        color: #16a34a;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+    }
+
+    .retard-row {
+        background: #fffafa;
+    }
+
+    .proche-row {
+        background: #fffdf7;
+    }
+
+    .emprunts-table tbody tr:hover {
+        background: #f8fafc;
+    }
+</style>
+
+<div class="emprunts-top">
+    <div class="emprunts-count">
+        @Model.Count() emprunt(s) trouvé(s)
+    </div>
+
+    <a asp-action="Create" class="add-emprunt-btn">
+        <i class="fa-solid fa-plus"></i>
+        Créer un emprunt
+    </a>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="message-box message-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="message-box message-error">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<div class="search-card">
+    <div class="search-input-wrapper">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+
+        <input id="empruntSearch"
+               type="text"
+               class="emprunt-search"
+               placeholder="Rechercher un emprunt..." />
+    </div>
+</div>
+
+<div class="table-card">
+    <table class="emprunts-table">
+        <thead>
+            <tr>
+                <th>Étudiant</th>
+                <th>Livre</th>
+                <th>Date emprunt</th>
+                <th>Date prévue</th>
+                <th>Date effective</th>
+                <th>Statut</th>
+                <th>Réservation</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model)
+            {
+                var dateRemisePrevue = item.DateRemisePrevue.Date;
+                var joursRestants = (dateRemisePrevue - aujourdHui).Days;
+
+                bool estEnRetard = item.DateRemiseEffective.HasValue
+                ? item.DateRemiseEffective.Value.Date > dateRemisePrevue
+                : dateRemisePrevue < aujourdHui;
+
+                bool remiseProche = !estEnRetard &&
+                !item.DateRemiseEffective.HasValue &&
+                joursRestants >= 0 && joursRestants <= 2;
+
+                bool estRendu = item.DateRemiseEffective.HasValue;
+
+                var rowClass = estEnRetard ? "retard-row" :
+                remiseProche ? "proche-row" : "";
+
+                <tr class="emprunt-row @rowClass">
+                    <td class="student-name">
+                        @item.Etudiant?.Prenom @item.Etudiant?.Nom
+                    </td>
+
+                    <td class="book-title">
+                        @item.Livre?.Titre
+                    </td>
+
+                    <td>
+                        @item.DateEmprunt.ToString("dd/MM/yyyy")
+                    </td>
+
+                    <td>
+                        @item.DateRemisePrevue.ToString("dd/MM/yyyy")
+
+                        @if (remiseProche)
+                        {
+                            <div class="date-warning">
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+                                @joursRestants j restant(s)
+                            </div>
+                        }
+                    </td>
+
+                    <td>
+                        @if (item.DateRemiseEffective.HasValue)
+                        {
+                            <span class="date-effective">
+                                @item.DateRemiseEffective.Value.ToString("dd/MM/yyyy")
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="date-empty">-</span>
+                        }
+                    </td>
+
+                    <td>
+                        @if (estRendu)
+                        {
+                            <span class="status-badge status-returned">Rendu</span>
+                        }
+                        else if (estEnRetard)
+                        {
+                            <span class="status-badge status-late">En retard</span>
+                            <div class="late-text">
+                                En retard de @Math.Abs(joursRestants) j
+                            </div>
+                        }
+                        else if (remiseProche)
+                        {
+                            <span class="status-badge status-warning">Alerte J-2</span>
+                        }
+                        else
+                        {
+                            <span class="status-badge status-current">En cours</span>
+                        }
+                    </td>
+
+                    <td>
+                        @(item.IdReservation.HasValue ? $"Réservation #{item.IdReservation}" : "Aucune")
+                    </td>
+
+                    <td>
+                        <div class="actions">
+
+                            @if (!item.DateRemiseEffective.HasValue)
+                            {
+                                <form asp-action="Retourner"
+                                      asp-route-id="@item.IdEmprunt"
+                                      method="post"
+                                      class="return-form">
+                                    <button type="submit" class="return-btn">
+                                        <i class="fa-solid fa-circle-check"></i>
+                                        Retour
+                                    </button>
+                                </form>
+                            }
+                            else
+                            {
+                                <span class="returned-label">
+                                    <i class="fa-solid fa-circle-check"></i>
+                                    Retourné
+                                </span>
+                            }
+
+                            <a asp-action="Details" asp-route-id="@item.IdEmprunt" class="action-view">
+                                <i class="fa-solid fa-eye"></i>
+                            </a>
+
+                            <a asp-action="Edit" asp-route-id="@item.IdEmprunt" class="action-edit">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </a>
+
+                            <a asp-action="Delete" asp-route-id="@item.IdEmprunt" class="action-delete">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </a>
+
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const input = document.getElementById("empruntSearch");
+        const rows = document.querySelectorAll(".emprunt-row");
+
+        input.addEventListener("input", function () {
+            const search = input.value.toLowerCase().trim();
+
+            rows.forEach(function (row) {
+                const text = row.innerText.toLowerCase();
+                row.style.display = text.includes(search) ? "" : "none";
+            });
+        });
+    });
+</script>

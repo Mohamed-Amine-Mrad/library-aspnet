@@ -1,0 +1,319 @@
+﻿@model LIBRARY_PLUS.Models.ViewModels.StudentBookSearchViewModel
+
+@{
+    Layout = "~/Views/Shared/_StudentLayout.cshtml";
+    ViewData["Title"] = "Rechercher";
+}
+
+<style>
+    .search-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+
+    .search-title {
+        font-size: 22px;
+        font-weight: 800;
+        color: #0f172a;
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .search-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 22px;
+    }
+
+    .search-input-wrapper {
+        position: relative;
+    }
+
+    .search-icon {
+        position: absolute;
+        left: 18px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #64748b;
+        font-size: 18px;
+    }
+
+    .search-input,
+    .category-select {
+        height: 58px;
+        border: 1px solid #dbe2ea;
+        border-radius: 10px;
+        padding: 0 18px;
+        font-size: 16px;
+        width: 100%;
+        background: white;
+        color: #334155;
+    }
+
+    .search-input {
+        padding-left: 54px;
+    }
+
+    .books-count {
+        color: #64748b;
+        font-size: 18px;
+        font-weight: 500;
+        margin-bottom: 22px;
+    }
+
+    .books-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 28px;
+    }
+
+    .book-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .book-cover {
+        height: 240px;
+        background: linear-gradient(135deg, #213c9b, #1d4ed8);
+        color: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 24px;
+        text-align: center;
+    }
+
+    .book-title {
+        font-size: 22px;
+        font-weight: 800;
+        margin-bottom: 18px;
+    }
+
+    .book-author {
+        font-size: 16px;
+        opacity: .95;
+    }
+
+    .book-body {
+        padding: 22px;
+    }
+
+    .book-info {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 24px;
+    }
+
+    .book-category {
+        color: #64748b;
+        font-size: 16px;
+    }
+
+    .book-badge {
+        padding: 7px 14px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .available {
+        background: #dcfce7;
+        color: #16a34a;
+        border: 1px solid #bbf7d0;
+    }
+
+    .unavailable {
+        background: #fee2e2;
+        color: #dc2626;
+        border: 1px solid #fecaca;
+    }
+
+    .book-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    .btn-details,
+    .btn-borrow,
+    .btn-reserve {
+        height: 48px;
+        border-radius: 9px;
+        font-weight: 700;
+        text-decoration: none;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+    }
+
+    .btn-details {
+        background: white;
+        color: #0f172a;
+        border: 1px solid #dbe2ea;
+    }
+
+    .btn-borrow {
+        background: #213c9b;
+        color: white;
+    }
+
+    .btn-reserve {
+        background: #fb3b08;
+        color: white;
+    }
+
+        .btn-borrow:hover,
+        .btn-reserve:hover,
+        .btn-details:hover {
+            opacity: .92;
+            color: inherit;
+        }
+
+    .hidden-book {
+        display: none;
+    }
+</style>
+
+<div class="search-card">
+    <div class="search-title">
+        <i class="fa-solid fa-filter"></i>
+        Rechercher un livre
+    </div>
+
+    <div class="search-grid">
+        <div class="search-input-wrapper">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input id="bookSearch"
+                   type="text"
+                   class="search-input"
+                   placeholder="Rechercher par titre ou auteur..." />
+        </div>
+
+        <select id="categoryFilter" class="category-select">
+            <option value="">Toutes les catégories</option>
+            @foreach (var category in Model.Categories)
+            {
+                <option value="@category.Value">@category.Text</option>
+            }
+        </select>
+    </div>
+</div>
+
+<div class="books-count">
+    <span id="visibleCount">@Model.Livres.Count</span> livre(s) trouvé(s)
+</div>
+
+<div class="books-grid" id="booksGrid">
+    @foreach (var livre in Model.Livres)
+    {
+        var auteurs = livre.AuteurLivres != null && livre.AuteurLivres.Any()
+        ? string.Join(", ", livre.AuteurLivres
+        .Where(al => al.Auteur != null)
+        .Select(al => al.Auteur!.Prenom + " " + al.Auteur!.Nom))
+        : "Auteur inconnu";
+
+        <div class="book-card"
+             data-title="@livre.Titre.ToLower()"
+             data-author="@auteurs.ToLower()"
+             data-category="@livre.IdCategorie">
+
+            <div class="book-cover">
+                <div class="book-title">@livre.Titre</div>
+                <div class="book-author">@auteurs</div>
+            </div>
+
+            <div class="book-body">
+                <div class="book-info">
+                    <div class="book-category">@livre.Categorie?.NomCategorie</div>
+
+                    @if (livre.Disponible)
+                    {
+                        <span class="book-badge available">Disponible</span>
+                    }
+                    else
+                    {
+                        <span class="book-badge unavailable">Indisponible</span>
+                    }
+                </div>
+
+                <div class="book-actions">
+                    <a asp-controller="Student"
+                       asp-action="BookDetails"
+                       asp-route-id="@livre.IdLivre"
+                       class="btn-details">
+                        <i class="fa-regular fa-eye"></i>
+                        Détails
+                    </a>
+
+                    @if (livre.Disponible)
+                    {
+                        <a asp-controller="Student"
+                           asp-action="BorrowBook"
+                           asp-route-id="@livre.IdLivre"
+                           class="btn-borrow">
+                            <i class="fa-solid fa-circle-check"></i>
+                            Emprunter
+                        </a>
+                    }
+                    else
+                    {
+                        <a asp-controller="Student"
+                           asp-action="ReserveBook"
+                           asp-route-id="@livre.IdLivre"
+                           class="btn-reserve">
+                            <i class="fa-regular fa-bookmark"></i>
+                            Réserver
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const searchInput = document.getElementById("bookSearch");
+        const categoryFilter = document.getElementById("categoryFilter");
+        const cards = document.querySelectorAll(".book-card");
+        const visibleCount = document.getElementById("visibleCount");
+
+        function filterBooks() {
+            const search = searchInput.value.toLowerCase().trim();
+            const category = categoryFilter.value;
+            let count = 0;
+
+            cards.forEach(card => {
+                const title = card.dataset.title || "";
+                const author = card.dataset.author || "";
+                const cardCategory = card.dataset.category || "";
+
+                const matchSearch = title.includes(search) || author.includes(search);
+                const matchCategory = category === "" || cardCategory === category;
+
+                if (matchSearch && matchCategory) {
+                    card.classList.remove("hidden-book");
+                    count++;
+                } else {
+                    card.classList.add("hidden-book");
+                }
+            });
+
+            visibleCount.textContent = count;
+        }
+
+        searchInput.addEventListener("input", filterBooks);
+        categoryFilter.addEventListener("change", filterBooks);
+    });
+</script>

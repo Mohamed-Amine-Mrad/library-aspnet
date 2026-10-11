@@ -1,0 +1,335 @@
+﻿@model IEnumerable<LIBRARY_PLUS.Models.Livre>
+
+@{
+    ViewData["Title"] = "Livres";
+}
+
+<style>
+    .books-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 26px;
+    }
+
+    .books-count {
+        color: #64748b;
+        font-size: 18px;
+        font-weight: 500;
+    }
+
+    .add-book-btn {
+        background: #213c9b;
+        color: white;
+        border-radius: 12px;
+        padding: 13px 24px;
+        text-decoration: none;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+        .add-book-btn:hover {
+            color: white;
+            background: #1d3588;
+        }
+
+    .filter-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        padding: 26px 30px;
+        margin-bottom: 30px;
+    }
+
+    .filter-title {
+        font-size: 22px;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 22px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .filter-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        gap: 20px;
+    }
+
+    .filter-input,
+    .filter-select {
+        height: 52px;
+        border: 1px solid #dbe2ea;
+        border-radius: 10px;
+        padding: 0 18px;
+        font-size: 16px;
+        color: #334155;
+        width: 100%;
+        background: white;
+    }
+
+    .table-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        overflow: hidden;
+    }
+
+    .books-table {
+        width: 100%;
+        margin: 0;
+        border-collapse: collapse;
+    }
+
+        .books-table thead {
+            background: #f1f5f9;
+        }
+
+        .books-table th {
+            padding: 18px 30px;
+            color: #64748b;
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .books-table td {
+            padding: 22px 30px;
+            color: #475569;
+            font-size: 16px;
+            border-top: 1px solid #e2e8f0;
+            vertical-align: middle;
+        }
+
+    .book-title {
+        color: #0f172a;
+        font-weight: 500;
+    }
+
+    .badge-available {
+        background: #dcfce7;
+        color: #16a34a;
+        border: 1px solid #bbf7d0;
+        padding: 7px 14px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .badge-unavailable {
+        background: #fee2e2;
+        color: #dc2626;
+        border: 1px solid #fecaca;
+        padding: 7px 14px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .actions {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+    }
+
+    .action-view {
+        color: #2563eb;
+    }
+
+    .action-edit {
+        color: #16a34a;
+    }
+
+    .action-delete {
+        color: #dc2626;
+    }
+
+    .actions a {
+        text-decoration: none;
+        font-size: 18px;
+    }
+
+    @@media(max-width: 1100px) {
+        .filter-grid {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+</style>
+
+<div class="books-top">
+    <div class="books-count">@Model.Count() livre(s) trouvé(s)</div>
+
+    <a asp-action="Create" class="add-book-btn">
+        <i class="fa-solid fa-plus"></i>
+        Ajouter un livre
+    </a>
+</div>
+
+<div class="filter-card">
+    <div class="filter-title">
+        <i class="fa-solid fa-filter"></i>
+        Filtres et recherche
+    </div>
+
+    <div class="filter-grid">
+
+        <input type="text"
+               id="searchInput"
+               class="filter-input"
+               placeholder="🔍 Rechercher par titre ou ISBN..." />
+
+        <select id="auteurFilter" class="filter-select">
+            <option value="">Tous les auteurs</option>
+            @foreach (var auteur in ViewBag.Auteurs)
+            {
+                <option value="@auteur.Value">@auteur.Text</option>
+            }
+        </select>
+
+        <select id="categorieFilter" class="filter-select">
+            <option value="">Toutes les catégories</option>
+            @foreach (var categorie in ViewBag.Categories)
+            {
+                <option value="@categorie.Value">@categorie.Text</option>
+            }
+        </select>
+
+        <select id="disponibleFilter" class="filter-select">
+            <option value="">Toutes disponibilités</option>
+            <option value="true">Disponible</option>
+            <option value="false">Indisponible</option>
+        </select>
+
+    </div>
+</div>
+
+<div class="table-card">
+    <table class="books-table">
+        <thead>
+            <tr>
+                <th>Titre</th>
+                <th>Auteur</th>
+                <th>Catégorie</th>
+                <th>ISBN</th>
+                <th>Année</th>
+                <th>Disponibilité</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr class="book-row"
+                    data-title="@item.Titre.ToLower()"
+                    data-isbn="@item.ISBN.ToLower()"
+                    data-category="@item.IdCategorie"
+                    data-available="@item.Disponible.ToString().ToLower()"
+                    data-authors="@(item.AuteurLivres != null ? string.Join(",", item.AuteurLivres.Select(al => al.IdAuteur)) : "")">
+
+                    <td class="book-title">@item.Titre</td>
+
+                    <td>
+                        @(item.AuteurLivres != null && item.AuteurLivres.Any()
+                                            ? string.Join(", ", item.AuteurLivres
+                                            .Where(al => al.Auteur != null)
+                                            .Select(al => al.Auteur!.Nom + " " + al.Auteur!.Prenom))
+                                            : "Aucun auteur")
+                </td>
+
+                    <td>@item.Categorie?.NomCategorie</td>
+                    <td>@item.ISBN</td>
+                    <td>@item.AnneePublication</td>
+
+                    <td>
+                    @if (item.Disponible)
+                        {
+                            <span class="badge-available">Disponible</span>
+                        }
+                        else
+                        {
+                            <span class="badge-unavailable">Indisponible</span>
+                        }
+                    </td>
+
+                    <td>
+                        <div class="actions">
+                            <a asp-action="Details" asp-route-id="@item.IdLivre" class="action-view">
+                                <i class="fa-solid fa-eye"></i>
+                            </a>
+
+                            <a asp-action="Edit" asp-route-id="@item.IdLivre" class="action-edit">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </a>
+
+                            <a asp-action="Delete" asp-route-id="@item.IdLivre" class="action-delete">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script>
+
+        const searchInput = document.getElementById("searchInput");
+        const auteurFilter = document.getElementById("auteurFilter");
+        const categorieFilter = document.getElementById("categorieFilter");
+        const disponibleFilter = document.getElementById("disponibleFilter");
+
+        const rows = document.querySelectorAll(".book-row");
+
+        function filterBooks() {
+
+            const search = searchInput.value.toLowerCase().trim();
+            const auteur = auteurFilter.value;
+            const categorie = categorieFilter.value;
+            const disponible = disponibleFilter.value;
+
+            rows.forEach(row => {
+
+                const title = row.dataset.title;
+                const isbn = row.dataset.isbn;
+                const authors = row.dataset.authors;
+                const category = row.dataset.category;
+                const available = row.dataset.available;
+
+                const matchSearch =
+                    title.includes(search) ||
+                    isbn.includes(search);
+
+                const matchAuteur =
+                    auteur === "" ||
+                    authors.split(",").includes(auteur);
+
+                const matchCategorie =
+                    categorie === "" ||
+                    category === categorie;
+
+                const matchDisponible =
+                    disponible === "" ||
+                    available === disponible;
+
+                row.style.display =
+                    matchSearch &&
+                    matchAuteur &&
+                    matchCategorie &&
+                    matchDisponible
+                        ? ""
+                        : "none";
+            });
+        }
+
+        searchInput.addEventListener("input", filterBooks);
+        auteurFilter.addEventListener("change", filterBooks);
+        categorieFilter.addEventListener("change", filterBooks);
+        disponibleFilter.addEventListener("change", filterBooks);
+
+    </script>
+}

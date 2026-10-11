@@ -1,0 +1,282 @@
+﻿@model IEnumerable<LIBRARY_PLUS.Models.Reservation>
+
+@{
+    ViewData["Title"] = "Réservations";
+}
+
+<style>
+    .reservations-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 26px;
+    }
+
+    .reservations-count {
+        color: #64748b;
+        font-size: 18px;
+        font-weight: 500;
+    }
+
+    .add-reservation-btn {
+        background: #213c9b;
+        color: white;
+        border-radius: 12px;
+        padding: 13px 24px;
+        text-decoration: none;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+        .add-reservation-btn:hover {
+            color: white;
+            background: #1d3588;
+        }
+
+    .search-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+
+    .search-input-wrapper {
+        position: relative;
+        max-width: 580px;
+    }
+
+    .search-icon {
+        position: absolute;
+        left: 18px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #64748b;
+        font-size: 18px;
+    }
+
+    .reservation-search {
+        height: 52px;
+        border: 1px solid #dbe2ea;
+        border-radius: 10px;
+        padding: 0 18px 0 54px;
+        font-size: 16px;
+        color: #334155;
+        width: 100%;
+        background: white;
+    }
+
+        .reservation-search:focus {
+            outline: none;
+            border-color: #213c9b;
+            box-shadow: 0 0 0 4px rgba(33,60,155,0.08);
+        }
+
+    .table-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        overflow: hidden;
+    }
+
+    .reservations-table {
+        width: 100%;
+        margin: 0;
+        border-collapse: collapse;
+    }
+
+        .reservations-table thead {
+            background: #f1f5f9;
+        }
+
+        .reservations-table th {
+            padding: 18px 30px;
+            color: #64748b;
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .reservations-table td {
+            padding: 22px 30px;
+            color: #475569;
+            font-size: 16px;
+            border-top: 1px solid #e2e8f0;
+            vertical-align: middle;
+        }
+
+    .student-name {
+        color: #0f172a;
+        font-weight: 500;
+    }
+
+    .status-badge {
+        padding: 7px 14px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 700;
+        display: inline-block;
+    }
+
+    .status-pending {
+        background: #ffedd5;
+        color: #ea580c;
+        border: 1px solid #fed7aa;
+    }
+
+    .status-valid {
+        background: #dcfce7;
+        color: #16a34a;
+        border: 1px solid #bbf7d0;
+    }
+
+    .status-cancel {
+        background: #fee2e2;
+        color: #dc2626;
+        border: 1px solid #fecaca;
+    }
+
+    .actions {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+
+        .actions a {
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+    .action-view {
+        color: #2563eb;
+    }
+
+    .action-edit {
+        color: #16a34a;
+    }
+
+    .action-delete {
+        color: #dc2626;
+    }
+
+    .validate-btn {
+        border: none;
+        background: #16a34a;
+        color: white;
+        border-radius: 10px;
+        padding: 10px 16px;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+        .validate-btn:hover {
+            background: #15803d;
+        }
+
+    .reservations-table tbody tr:hover {
+        background: #f8fafc;
+    }
+</style>
+
+<div class="reservations-top">
+    <div class="reservations-count">
+        @Model.Count() réservation(s) trouvée(s)
+    </div>
+
+    <a asp-action="Create" class="add-reservation-btn">
+        <i class="fa-solid fa-plus"></i>
+        Ajouter une réservation
+    </a>
+</div>
+
+<div class="search-card">
+    <div class="search-input-wrapper">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+
+        <input id="reservationSearch"
+               type="text"
+               class="reservation-search"
+               placeholder="Rechercher une réservation..." />
+    </div>
+</div>
+
+<div class="table-card">
+    <table class="reservations-table">
+        <thead>
+            <tr>
+                <th>Étudiant</th>
+                <th>Livre</th>
+                <th>Date de réservation</th>
+                <th>Statut</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model)
+            {
+                var statut = item.Statut ?? "";
+                var statusClass = statut.ToLower().Contains("valid") ? "status-valid"
+                : statut.ToLower().Contains("refus") ? "status-cancel"
+                : "status-pending";
+
+                <tr class="reservation-row">
+                    <td class="student-name">@item.Etudiant?.Prenom @item.Etudiant?.Nom</td>
+                    <td>@item.Livre?.Titre</td>
+                    <td>@item.DateReservation.ToString("dd/MM/yyyy")</td>
+
+                    <td>
+                        <span class="status-badge @statusClass">
+                            @item.Statut
+                        </span>
+                    </td>
+
+                    <td>
+                        <div class="actions">
+                            @if (!statut.ToLower().Contains("valid"))
+                            {
+                                <a asp-action="Edit"
+                                   asp-route-id="@item.IdReservation"
+                                   class="validate-btn">
+                                    <i class="fa-solid fa-circle-check"></i>
+                                    Valider
+                                </a>
+                            }
+
+                            <a asp-action="Details" asp-route-id="@item.IdReservation" class="action-view">
+                                <i class="fa-solid fa-eye"></i>
+                            </a>
+
+                            <a asp-action="Edit" asp-route-id="@item.IdReservation" class="action-edit">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </a>
+
+                            <a asp-action="Delete" asp-route-id="@item.IdReservation" class="action-delete">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const input = document.getElementById("reservationSearch");
+        const rows = document.querySelectorAll(".reservation-row");
+
+        input.addEventListener("input", function () {
+            const search = input.value.toLowerCase().trim();
+
+            rows.forEach(function (row) {
+                const text = row.innerText.toLowerCase();
+                row.style.display = text.includes(search) ? "" : "none";
+            });
+        });
+    });
+</script>

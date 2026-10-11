@@ -1,0 +1,318 @@
+﻿@model LIBRARY_PLUS.Models.Reservation
+
+@{
+    ViewData["Title"] = "Supprimer une réservation";
+
+    var statut = Model.Statut ?? "";
+    var statusClass = statut.ToLower().Contains("valid") ? "status-valid"
+        : statut.ToLower().Contains("refus") ? "status-cancel"
+        : "status-pending";
+}
+
+<style>
+    .delete-page {
+        max-width: 950px;
+        margin: 0 auto;
+    }
+
+    .delete-header {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        margin-bottom: 28px;
+    }
+
+    .back-link {
+        color: #0f172a;
+        font-size: 22px;
+        text-decoration: none;
+    }
+
+    .delete-title {
+        font-size: 30px;
+        font-weight: 700;
+        color: #0f172a;
+        margin: 0;
+    }
+
+    .delete-subtitle {
+        color: #64748b;
+        margin: 4px 0 0;
+    }
+
+    .delete-card {
+        background: white;
+        border: 1px solid #fecaca;
+        border-radius: 18px;
+        overflow: hidden;
+    }
+
+    .warning-box {
+        background: #fef2f2;
+        padding: 30px;
+        border-bottom: 1px solid #fecaca;
+        display: flex;
+        gap: 18px;
+        align-items: center;
+    }
+
+    .warning-icon {
+        width: 58px;
+        height: 58px;
+        border-radius: 16px;
+        background: #fee2e2;
+        color: #dc2626;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+    }
+
+    .warning-title {
+        font-size: 24px;
+        font-weight: 700;
+        color: #991b1b;
+        margin-bottom: 4px;
+    }
+
+    .warning-text {
+        color: #7f1d1d;
+        margin: 0;
+    }
+
+    .reservation-section {
+        padding: 34px;
+    }
+
+    .reservation-top {
+        display: flex;
+        align-items: center;
+        gap: 22px;
+        margin-bottom: 34px;
+    }
+
+    .reservation-avatar {
+        width: 96px;
+        height: 96px;
+        border-radius: 24px;
+        background: linear-gradient(135deg, #213c9b, #1d4ed8);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 36px;
+    }
+
+    .reservation-name {
+        font-size: 30px;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 8px;
+    }
+
+    .reservation-book {
+        color: #64748b;
+        font-size: 16px;
+        margin-bottom: 12px;
+    }
+
+    .status-badge {
+        display: inline-block;
+        padding: 7px 14px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .status-valid {
+        background: #dcfce7;
+        color: #15803d;
+    }
+
+    .status-pending {
+        background: #ffedd5;
+        color: #ea580c;
+    }
+
+    .status-cancel {
+        background: #fee2e2;
+        color: #dc2626;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 22px;
+    }
+
+    .info-item {
+        background: #f8fafc;
+        border-radius: 14px;
+        padding: 22px;
+    }
+
+    .info-label {
+        color: #64748b;
+        font-size: 14px;
+        margin-bottom: 8px;
+    }
+
+    .info-value {
+        color: #0f172a;
+        font-size: 17px;
+        font-weight: 600;
+    }
+
+    .delete-actions {
+        padding: 28px 34px;
+        border-top: 1px solid #e2e8f0;
+        display: flex;
+        gap: 16px;
+    }
+
+    .btn-delete {
+        background: #dc2626;
+        color: white;
+        border: none;
+        border-radius: 12px;
+        padding: 14px 28px;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+        .btn-delete:hover {
+            background: #b91c1c;
+        }
+
+    .btn-back {
+        background: white;
+        color: #0f172a;
+        border: 1px solid #dbe2ea;
+        border-radius: 12px;
+        padding: 14px 28px;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+        .btn-back:hover {
+            background: #f8fafc;
+            color: #0f172a;
+        }
+</style>
+
+<div class="delete-page">
+
+    <div class="delete-header">
+        <a asp-action="Index" class="back-link">
+            <i class="fa-solid fa-arrow-left"></i>
+        </a>
+
+        <div>
+            <h1 class="delete-title">Supprimer une réservation</h1>
+            <p class="delete-subtitle">Confirmation de suppression</p>
+        </div>
+    </div>
+
+    <div class="delete-card">
+
+        <div class="warning-box">
+
+            <div class="warning-icon">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+
+            <div>
+                <div class="warning-title">
+                    Es-tu sûr de vouloir supprimer cette réservation ?
+                </div>
+
+                <p class="warning-text">
+                    Cette action est définitive et supprimera la réservation du système.
+                </p>
+            </div>
+
+        </div>
+
+        <div class="reservation-section">
+
+            <div class="reservation-top">
+
+                <div class="reservation-avatar">
+                    <i class="fa-regular fa-bookmark"></i>
+                </div>
+
+                <div>
+                    <div class="reservation-name">
+                        @Model.Etudiant?.Prenom @Model.Etudiant?.Nom
+                    </div>
+
+                    <div class="reservation-book">
+                        <i class="fa-solid fa-book-open me-2"></i>
+                        @Model.Livre?.Titre
+                    </div>
+
+                    <span class="status-badge @statusClass">
+                        @Model.Statut
+                    </span>
+                </div>
+
+            </div>
+
+            <div class="info-grid">
+
+                <div class="info-item">
+                    <div class="info-label">Étudiant</div>
+                    <div class="info-value">
+                        @Model.Etudiant?.Prenom @Model.Etudiant?.Nom
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-label">Livre</div>
+                    <div class="info-value">
+                        @Model.Livre?.Titre
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-label">Date de réservation</div>
+                    <div class="info-value">
+                        @Model.DateReservation.ToString("dd/MM/yyyy")
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-label">Statut</div>
+                    <div class="info-value">
+                        @Model.Statut
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <form asp-action="Delete">
+
+            <input type="hidden" asp-for="IdReservation" />
+
+            <div class="delete-actions">
+
+                <button type="submit" class="btn-delete">
+                    <i class="fa-solid fa-trash-can"></i>
+                    Confirmer la suppression
+                </button>
+
+                <a asp-action="Index" class="btn-back">
+                    Retour à la liste
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>

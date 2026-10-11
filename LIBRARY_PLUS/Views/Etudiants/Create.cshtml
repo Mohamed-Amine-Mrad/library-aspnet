@@ -1,0 +1,214 @@
+﻿@model LIBRARY_PLUS.Models.Etudiant
+
+@{
+    ViewData["Title"] = "Ajouter un étudiant";
+}
+
+<style>
+    .student-form-page {
+        max-width: 1100px;
+        margin: auto;
+    }
+
+    .student-form-header {
+        display: flex;
+        align-items: flex-start;
+        gap: 18px;
+        margin-bottom: 30px;
+    }
+
+    .back-btn {
+        width: 42px;
+        height: 42px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #0f172a;
+        text-decoration: none;
+        font-size: 20px;
+    }
+
+    .student-form-header h1 {
+        font-size: 42px;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 4px;
+    }
+
+    .student-form-header p {
+        color: #64748b;
+        font-size: 18px;
+        margin: 0;
+    }
+
+    .student-form-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 18px;
+        padding: 42px;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 28px;
+    }
+
+    .full-width {
+        grid-column: span 2;
+    }
+
+    .student-form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+        .student-form-group label {
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+        .student-form-group input {
+            height: 58px;
+            border: 1px solid #dbe2ea;
+            border-radius: 12px;
+            padding: 0 18px;
+            font-size: 16px;
+            color: #334155;
+            background: white;
+        }
+
+            .student-form-group input:focus {
+                outline: none;
+                border-color: #213c9b;
+                box-shadow: 0 0 0 4px rgba(33,60,155,0.08);
+            }
+
+    .student-actions {
+        display: flex;
+        gap: 18px;
+        margin-top: 40px;
+        padding-top: 30px;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    .btn-create-student {
+        height: 56px;
+        padding: 0 28px;
+        border: none;
+        border-radius: 12px;
+        background: #213c9b;
+        color: white;
+        font-size: 16px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+        .btn-create-student:hover {
+            background: #1d3588;
+        }
+
+    .btn-cancel-student {
+        height: 56px;
+        padding: 0 28px;
+        border-radius: 12px;
+        border: 1px solid #dbe2ea;
+        background: white;
+        color: #334155;
+        text-decoration: none;
+        font-size: 16px;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .text-danger {
+        margin-top: 6px;
+        font-size: 14px;
+    }
+</style>
+
+<div class="student-form-page">
+
+    <div class="student-form-header">
+
+        <a asp-action="Index" class="back-btn">
+            <i class="fa-solid fa-arrow-left"></i>
+        </a>
+
+        <div>
+            <h1>Ajouter un étudiant</h1>
+            <p>Remplissez les informations du nouvel étudiant</p>
+        </div>
+
+    </div>
+
+    <div class="student-form-card">
+
+        <form asp-action="Create">
+
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-4"></div>
+
+            <div class="form-grid">
+
+                <div class="student-form-group">
+                    <label asp-for="Nom">Nom *</label>
+                    <input asp-for="Nom" placeholder="Ex: Lambert" />
+                    <span asp-validation-for="Nom" class="text-danger"></span>
+                </div>
+
+                <div class="student-form-group">
+                    <label asp-for="Prenom">Prénom *</label>
+                    <input asp-for="Prenom" placeholder="Ex: Marie" />
+                    <span asp-validation-for="Prenom" class="text-danger"></span>
+                </div>
+
+                <div class="student-form-group full-width">
+                    <label asp-for="Email">Email *</label>
+                    <input asp-for="Email" placeholder="Ex: marie.lambert@univ.fr" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="student-form-group">
+                    <label asp-for="Classe">Classe *</label>
+                    <input asp-for="Classe" placeholder="Ex: M2 Info" />
+                    <span asp-validation-for="Classe" class="text-danger"></span>
+                </div>
+
+                <div class="student-form-group">
+                    <label asp-for="ScoreEmprunt">Score initial</label>
+                    <input asp-for="ScoreEmprunt" placeholder="0" />
+                    <span asp-validation-for="ScoreEmprunt" class="text-danger"></span>
+                </div>
+
+            </div>
+
+            <div class="student-actions">
+
+                <button type="submit" class="btn-create-student">
+                    <i class="fa-regular fa-floppy-disk"></i>
+                    Créer
+                </button>
+
+                <a asp-action="Index" class="btn-cancel-student">
+                    Annuler
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

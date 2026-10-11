@@ -1,0 +1,316 @@
+﻿@model IEnumerable<LIBRARY_PLUS.Models.Emprunt>
+
+@{
+    Layout = "~/Views/Shared/_StudentLayout.cshtml";
+    ViewData["Title"] = "Mes emprunts";
+    var today = DateTime.Today;
+
+    var empruntsEnCours = Model.Where(e => e.DateRemiseEffective == null)
+                               .OrderBy(e => e.DateRemisePrevue)
+                               .ToList();
+
+    var historique = Model.Where(e => e.DateRemiseEffective != null)
+                          .OrderByDescending(e => e.DateRemiseEffective)
+                          .ToList();
+
+    var hasWarning = empruntsEnCours.Any(e =>
+        e.DateRemisePrevue.Date >= today &&
+        e.DateRemisePrevue.Date <= today.AddDays(2));
+}
+
+<style>
+    .student-alert {
+        background: #fff7ed;
+        border: 1px solid #fdba74;
+        color: #c2410c;
+        border-radius: 12px;
+        padding: 18px 22px;
+        margin-bottom: 30px;
+        font-weight: 500;
+    }
+
+    .emprunts-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+
+    .section-title {
+        font-size: 23px;
+        font-weight: 800;
+        color: #0f172a;
+        margin-bottom: 28px;
+    }
+
+    .loan-item {
+        background: #f1f5f9;
+        border: 1px solid #dbe2ea;
+        border-radius: 10px;
+        padding: 28px 30px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+    }
+
+    .loan-warning {
+        background: #fff7ed;
+        border-color: #fdba74;
+    }
+
+    .book-side {
+        display: flex;
+        align-items: center;
+        gap: 26px;
+    }
+
+    .book-cover {
+        width: 100px;
+        height: 140px;
+        border-radius: 9px;
+        background: linear-gradient(135deg, #213c9b, #1d4ed8);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px;
+        text-align: center;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .book-cover-history {
+        background: linear-gradient(135deg, #6b7280, #9ca3af);
+    }
+
+    .book-title {
+        color: #0f172a;
+        font-size: 20px;
+        font-weight: 800;
+        margin-bottom: 9px;
+    }
+
+    .book-author {
+        color: #64748b;
+        font-size: 16px;
+        margin-bottom: 6px;
+    }
+
+    .book-category {
+        color: #64748b;
+        font-size: 14px;
+        margin-bottom: 18px;
+    }
+
+    .book-meta {
+        display: flex;
+        gap: 24px;
+        flex-wrap: wrap;
+        color: #64748b;
+        font-size: 15px;
+    }
+
+        .book-meta span {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+    .delay-warning {
+        color: #c2410c;
+        margin-top: 14px;
+        font-size: 15px;
+        font-weight: 500;
+    }
+
+    .delay-ok {
+        color: #16a34a;
+        font-size: 15px;
+        font-weight: 600;
+    }
+
+    .status-badge {
+        padding: 7px 14px;
+        border-radius: 999px;
+        font-size: 14px;
+        font-weight: 700;
+        white-space: nowrap;
+        align-self: flex-start;
+    }
+
+    .status-current {
+        background: #dbeafe;
+        color: #2563eb;
+        border: 1px solid #bfdbfe;
+    }
+
+    .status-warning {
+        background: #ffedd5;
+        color: #ea580c;
+        border: 1px solid #fed7aa;
+    }
+
+    .status-returned {
+        background: #dcfce7;
+        color: #15803d;
+        border: 1px solid #bbf7d0;
+    }
+
+    .status-late {
+        background: #fee2e2;
+        color: #dc2626;
+        border: 1px solid #fecaca;
+    }
+
+    .empty-state {
+        color: #64748b;
+        font-size: 16px;
+        margin: 0;
+    }
+</style>
+
+@if (hasWarning)
+{
+    <div class="student-alert">
+        <i class="fa-solid fa-triangle-exclamation me-2"></i>
+        Vous avez des livres à rendre bientôt. Pensez à les ramener avant la date limite pour éviter les pénalités.
+    </div>
+}
+
+<div class="emprunts-card">
+    <h2 class="section-title">Emprunts en cours</h2>
+
+    @if (empruntsEnCours.Any())
+    {
+        @foreach (var item in empruntsEnCours)
+        {
+            var joursRestants = (item.DateRemisePrevue.Date - today).Days;
+            var warning = joursRestants <= 2 && joursRestants >= 0;
+            var late = item.DateRemisePrevue.Date < today;
+
+            <div class="loan-item @(warning ? "loan-warning" : "")">
+                <div class="book-side">
+                    <div class="book-cover">
+                        @(item.Livre?.Titre?.Length > 10 ? item.Livre.Titre.Substring(0, 10) : item.Livre?.Titre)
+                    </div>
+
+                    <div>
+                        <div class="book-title">@item.Livre?.Titre</div>
+                        <div class="book-author">Livre emprunté</div>
+                        <div class="book-category">@item.Livre?.Categorie?.NomCategorie</div>
+
+                        <div class="book-meta">
+                            <span>
+                                <i class="fa-regular fa-calendar"></i>
+                                Emprunté le @item.DateEmprunt.ToString("dd/MM/yyyy")
+                            </span>
+
+                            <span>
+                                <i class="fa-regular fa-calendar"></i>
+                                À rendre le @item.DateRemisePrevue.ToString("dd/MM/yyyy")
+                            </span>
+                        </div>
+
+                        @if (late)
+                        {
+                            <div class="delay-warning">
+                                <i class="fa-solid fa-triangle-exclamation me-1"></i>
+                                En retard de @Math.Abs(joursRestants) jour(s)
+                            </div>
+                        }
+                        else if (warning)
+                        {
+                            <div class="delay-warning">
+                                <i class="fa-solid fa-triangle-exclamation me-1"></i>
+                                Attention : plus que @joursRestants jour(s) pour rendre ce livre
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                @if (late)
+                {
+                    <span class="status-badge status-late">
+                        En retard
+                    </span>
+                }
+                else if (warning)
+                {
+                    <span class="status-badge status-warning">
+                        @joursRestants j restants
+                    </span>
+                }
+                else
+                {
+                    <span class="status-badge status-current">
+                        @joursRestants j restants
+                    </span>
+                }
+            </div>
+        }
+    }
+    else
+    {
+        <p class="empty-state">Aucun emprunt en cours.</p>
+    }
+</div>
+
+<div class="emprunts-card">
+    <h2 class="section-title">Historique</h2>
+
+    @if (historique.Any())
+    {
+        @foreach (var item in historique)
+        {
+            var renduEnRetard = item.DateRemiseEffective!.Value.Date > item.DateRemisePrevue.Date;
+
+            <div class="loan-item">
+                <div class="book-side">
+                    <div class="book-cover book-cover-history">
+                        @(item.Livre?.Titre?.Length > 10 ? item.Livre.Titre.Substring(0, 10) : item.Livre?.Titre)
+                    </div>
+
+                    <div>
+                        <div class="book-title">@item.Livre?.Titre</div>
+                        <div class="book-author">Livre emprunté</div>
+                        <div class="book-category">@item.Livre?.Categorie?.NomCategorie</div>
+
+                        <div class="book-meta">
+                            <span>
+                                Emprunté le @item.DateEmprunt.ToString("dd/MM/yyyy")
+                            </span>
+
+                            <span>
+                                Rendu le @item.DateRemiseEffective.Value.ToString("dd/MM/yyyy")
+                            </span>
+
+                            @if (renduEnRetard)
+                            {
+                                <span class="status-late">
+                                    En retard
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="delay-ok">
+                                    ✓ À temps
+                                </span>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <span class="status-badge status-returned">
+                    Rendu
+                </span>
+            </div>
+        }
+    }
+    else
+    {
+        <p class="empty-state">Aucun historique disponible.</p>
+    }
+</div>

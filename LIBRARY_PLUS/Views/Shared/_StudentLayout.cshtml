@@ -1,0 +1,324 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using LIBRARY_PLUS.Data
+@inject AppDbContext _context
+
+
+@{
+    var email = User.Identity?.Name ?? "";
+
+    var student = _context.Etudiants.FirstOrDefault(e => e.Email == email);
+
+    var fullName = student != null
+        ? student.Prenom + " " + student.Nom
+        : email;
+
+    var classe = student?.Classe ?? "Espace étudiant";
+
+    var initials = "ET";
+
+    if (student != null)
+    {
+        initials = (student.Prenom.Substring(0, 1) + student.Nom.Substring(0, 1)).ToUpper();
+    }
+    else if (!string.IsNullOrEmpty(email))
+    {
+        initials = email.Substring(0, 1).ToUpper();
+    }
+}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>@ViewData["Title"] - Library Plus</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: #f5f7fb;
+            color: #0f172a;
+        }
+
+        .student-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .student-sidebar {
+            width: 280px;
+            background: white;
+            border-right: 1px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            inset: 0 auto 0 0;
+        }
+
+        .student-logo {
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 30px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .student-logo-img {
+            width: 160px;
+            height: auto;
+            object-fit: contain;
+        }
+
+        .student-logo-title {
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .student-logo-subtitle {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .student-nav {
+            padding: 22px 18px;
+            flex: 1;
+        }
+
+            .student-nav a {
+                display: flex;
+                align-items: center;
+                gap: 16px;
+                padding: 15px 18px;
+                border-radius: 12px;
+                color: #0f172a;
+                text-decoration: none;
+                font-size: 18px;
+                font-weight: 500;
+                margin-bottom: 10px;
+            }
+
+                .student-nav a.active,
+                .student-nav a:hover {
+                    background: #213c9b;
+                    color: white;
+                }
+
+            .student-nav i {
+                width: 22px;
+                font-size: 20px;
+            }
+
+        .student-logout {
+            padding: 20px 18px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+            .student-logout button {
+                width: 100%;
+                border: none;
+                background: white;
+                color: #0f172a;
+                font-size: 18px;
+                font-weight: 600;
+                display: flex;
+                align-items: center;
+                gap: 16px;
+                padding: 15px 18px;
+                border-radius: 12px;
+            }
+
+                .student-logout button:hover {
+                    background: #f1f5f9;
+                }
+
+        .student-main {
+            margin-left: 280px;
+            width: calc(100% - 280px);
+        }
+
+        .student-topbar {
+            height: 86px;
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 38px;
+        }
+
+        .student-page-title {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .student-profile {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .student-bell {
+            position: relative;
+            font-size: 22px;
+            color: #475569;
+        }
+
+            .student-bell::after {
+                content: "";
+                position: absolute;
+                top: -3px;
+                right: -4px;
+                width: 9px;
+                height: 9px;
+                background: #f59e0b;
+                border-radius: 50%;
+            }
+
+        .student-profile-info {
+            border-left: 1px solid #e2e8f0;
+            padding-left: 24px;
+            text-align: right;
+        }
+
+        .student-profile-name {
+            font-weight: 700;
+            font-size: 16px;
+            color: #0f172a;
+        }
+
+        .student-profile-email {
+            color: #475569;
+            font-size: 13px;
+            margin-top: 2px;
+        }
+
+        .student-profile-class {
+            color: #64748b;
+            font-size: 13px;
+            margin-top: 2px;
+        }
+
+        .student-avatar {
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            background: #213c9b;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 16px;
+        }
+
+        .student-content {
+            padding: 38px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="student-layout">
+
+        <aside class="student-sidebar">
+
+            <div class="student-logo">
+                <img src="~/images/logo.png" alt="Library Plus" class="student-logo-img" />
+            </div>
+
+            @{
+                var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+            }
+
+            <nav class="student-nav">
+
+                <a asp-controller="Student"
+                   asp-action="Index"
+                   class="@(currentAction == "Index" ? "active" : "")">
+
+                    <i class="fa-solid fa-book-open"></i>
+                    Accueil
+                </a>
+
+                <a asp-controller="Student"
+                   asp-action="Search"
+                   class="@(currentAction == "Search" ? "active" : "")">
+
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    Rechercher
+                </a>
+
+                <a asp-controller="Student"
+                   asp-action="Reservations"
+                   class="@(currentAction == "Reservations" ? "active" : "")">
+
+                    <i class="fa-regular fa-bookmark"></i>
+                    Mes réservations
+                </a>
+
+                <a asp-controller="Student"
+                   asp-action="Emprunts"
+                   class="@(currentAction == "Emprunts" ? "active" : "")">
+
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                    Mes emprunts
+                </a>
+
+            </nav>
+
+            <div class="student-logout">
+                <form asp-controller="Account" asp-action="Logout" method="post">
+                    <button type="submit">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                        Déconnexion
+                    </button>
+                </form>
+            </div>
+
+        </aside>
+
+        <main class="student-main">
+
+            <header class="student-topbar">
+                <div class="student-page-title">
+                    @ViewData["Title"]
+                </div>
+
+                <div class="student-profile">
+                    <div class="student-bell">
+                        <i class="fa-regular fa-bell"></i>
+                    </div>
+
+                    <div class="student-profile-info">
+                        <div class="student-profile-name">@fullName</div>
+                        <div class="student-profile-email">@email</div>
+                        <div class="student-profile-class">@classe</div>
+                    </div>
+
+                    <div class="student-avatar">@initials</div>
+                </div>
+            </header>
+
+            <div class="student-content">
+                @RenderBody()
+            </div>
+
+        </main>
+
+    </div>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

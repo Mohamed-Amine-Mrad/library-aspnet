@@ -1,0 +1,320 @@
+﻿@model LIBRARY_PLUS.Models.Livre
+
+@{
+    ViewData["Title"] = "Détails du livre";
+
+    var auteurs = Model.AuteurLivres != null && Model.AuteurLivres.Any()
+        ? string.Join(", ", Model.AuteurLivres
+            .Where(al => al.Auteur != null)
+            .Select(al => al.Auteur!.Nom + " " + al.Auteur!.Prenom))
+        : "Aucun auteur";
+}
+
+<style>
+    .details-page {
+        max-width: 950px;
+        margin: 0 auto;
+    }
+
+    .details-header {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        margin-bottom: 28px;
+    }
+
+    .back-link {
+        color: #0f172a;
+        font-size: 22px;
+        text-decoration: none;
+    }
+
+    .details-title {
+        font-size: 28px;
+        font-weight: 700;
+        color: #0f172a;
+        margin: 0;
+    }
+
+    .details-subtitle {
+        color: #64748b;
+        margin: 3px 0 0;
+    }
+
+    .details-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .book-hero {
+        background: linear-gradient(135deg, #213c9b, #1d4ed8);
+        color: white;
+        padding: 34px;
+        display: flex;
+        gap: 28px;
+        align-items: center;
+    }
+
+    .book-icon-box {
+        width: 130px;
+        height: 160px;
+        border-radius: 10px;
+        background: rgba(255,255,255,0.14);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 56px;
+    }
+
+    .book-hero-title {
+        font-size: 32px;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    .book-author {
+        font-size: 18px;
+        opacity: 0.95;
+        margin-bottom: 16px;
+    }
+
+    .status-badge {
+        display: inline-block;
+        padding: 7px 14px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .available {
+        background: #dcfce7;
+        color: #15803d;
+    }
+
+    .unavailable {
+        background: #fee2e2;
+        color: #dc2626;
+    }
+
+    .details-body {
+        padding: 34px;
+    }
+
+    .description-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 12px;
+    }
+
+    .description-text {
+        color: #475569;
+        line-height: 1.8;
+        margin-bottom: 28px;
+    }
+
+    .details-divider {
+        border-top: 1px solid #e2e8f0;
+        margin: 28px 0;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 28px 80px;
+    }
+
+    .info-item {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .info-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+    }
+
+    .icon-category {
+        background: #eef2ff;
+        color: #4f46e5;
+    }
+
+    .icon-isbn {
+        background: #ecfdf5;
+        color: #16a34a;
+    }
+
+    .icon-year {
+        background: #faf5ff;
+        color: #9333ea;
+    }
+
+    .icon-status {
+        background: #fff7ed;
+        color: #ea580c;
+    }
+
+    .info-label {
+        color: #64748b;
+        font-size: 14px;
+    }
+
+    .info-value {
+        color: #0f172a;
+        font-size: 15px;
+        font-weight: 500;
+    }
+
+    .details-actions {
+        display: flex;
+        gap: 16px;
+        margin-top: 30px;
+    }
+
+    .btn-edit {
+        background: #213c9b;
+        color: white;
+        text-decoration: none;
+        padding: 14px 24px;
+        border-radius: 10px;
+        font-weight: 700;
+    }
+
+        .btn-edit:hover {
+            background: #1d3588;
+            color: white;
+        }
+
+    .btn-back {
+        background: white;
+        color: #0f172a;
+        text-decoration: none;
+        padding: 14px 24px;
+        border-radius: 10px;
+        border: 1px solid #dbe2ea;
+        font-weight: 600;
+    }
+
+        .btn-back:hover {
+            background: #f8fafc;
+            color: #0f172a;
+        }
+</style>
+
+<div class="details-page">
+
+    <div class="details-header">
+        <a asp-action="Index" class="back-link">
+            <i class="fa-solid fa-arrow-left"></i>
+        </a>
+
+        <div>
+            <h1 class="details-title">Détails du livre</h1>
+            <p class="details-subtitle">Informations complètes</p>
+        </div>
+    </div>
+
+    <div class="details-card">
+
+        <div class="book-hero">
+            <div class="book-icon-box">
+                <i class="fa-solid fa-book-open"></i>
+            </div>
+
+            <div>
+                <div class="book-hero-title">@Model.Titre</div>
+
+                <div class="book-author">
+                    <i class="fa-regular fa-user me-2"></i>
+                    @auteurs
+                </div>
+
+                @if (Model.Disponible)
+                {
+                    <span class="status-badge available">Disponible</span>
+                }
+                else
+                {
+                    <span class="status-badge unavailable">Indisponible</span>
+                }
+            </div>
+        </div>
+
+        <div class="details-body">
+            <div class="description-title">Description</div>
+
+            <p class="description-text">
+                Informations détaillées sur le livre sélectionné dans la bibliothèque.
+            </p>
+
+            <div class="details-divider"></div>
+
+            <div class="info-grid">
+
+                <div class="info-item">
+                    <div class="info-icon icon-category">
+                        <i class="fa-solid fa-layer-group"></i>
+                    </div>
+                    <div>
+                        <div class="info-label">Catégorie</div>
+                        <div class="info-value">@Model.Categorie?.NomCategorie</div>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-icon icon-isbn">
+                        <i class="fa-solid fa-hashtag"></i>
+                    </div>
+                    <div>
+                        <div class="info-label">ISBN</div>
+                        <div class="info-value">@Model.ISBN</div>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-icon icon-year">
+                        <i class="fa-regular fa-calendar"></i>
+                    </div>
+                    <div>
+                        <div class="info-label">Année de publication</div>
+                        <div class="info-value">@Model.AnneePublication</div>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-icon icon-status">
+                        <i class="fa-solid fa-book"></i>
+                    </div>
+                    <div>
+                        <div class="info-label">Statut</div>
+                        <div class="info-value">
+                            @(Model.Disponible ? "Disponible en bibliothèque" : "Actuellement indisponible")
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="details-divider"></div>
+
+            <div class="details-actions">
+                <a asp-action="Edit" asp-route-id="@Model.IdLivre" class="btn-edit">
+                    Modifier ce livre
+                </a>
+
+                <a asp-action="Index" class="btn-back">
+                    Retour à la liste
+                </a>
+            </div>
+        </div>
+
+    </div>
+</div>

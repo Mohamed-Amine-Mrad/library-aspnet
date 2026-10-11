@@ -1,0 +1,288 @@
+﻿@model LIBRARY_PLUS.Models.Livre
+
+@{
+    Layout = "~/Views/Shared/_StudentLayout.cshtml";
+    ViewData["Title"] = "Détails du livre";
+
+    var auteurs = Model.AuteurLivres != null && Model.AuteurLivres.Any()
+        ? string.Join(", ", Model.AuteurLivres
+            .Where(al => al.Auteur != null)
+            .Select(al => al.Auteur!.Prenom + " " + al.Auteur!.Nom))
+        : "Auteur inconnu";
+}
+
+<style>
+    .book-details-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        overflow: hidden;
+        max-width: 950px;
+    }
+
+    .book-hero {
+        background: linear-gradient(135deg, #213c9b, #1d4ed8);
+        color: white;
+        padding: 38px;
+        display: flex;
+        gap: 28px;
+        align-items: center;
+    }
+
+    .book-icon {
+        width: 130px;
+        height: 130px;
+        border-radius: 22px;
+        background: rgba(255,255,255,0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 54px;
+    }
+
+    .book-title {
+        font-size: 34px;
+        font-weight: 800;
+        margin-bottom: 10px;
+    }
+
+    .book-author {
+        font-size: 18px;
+        opacity: .95;
+        margin-bottom: 14px;
+    }
+
+    .book-badge {
+        display: inline-block;
+        padding: 7px 14px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 800;
+    }
+
+    .available {
+        background: #dcfce7;
+        color: #15803d;
+    }
+
+    .unavailable {
+        background: #fee2e2;
+        color: #dc2626;
+    }
+
+    .book-body {
+        padding: 34px;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 22px;
+        margin-bottom: 32px;
+    }
+
+    .info-item {
+        background: #f8fafc;
+        border-radius: 14px;
+        padding: 22px;
+        display: flex;
+        gap: 16px;
+        align-items: center;
+    }
+
+    .info-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+    }
+
+    .icon-category {
+        background: #eef2ff;
+        color: #4f46e5;
+    }
+
+    .icon-isbn {
+        background: #ecfdf5;
+        color: #16a34a;
+    }
+
+    .icon-year {
+        background: #faf5ff;
+        color: #9333ea;
+    }
+
+    .icon-status {
+        background: #fff7ed;
+        color: #ea580c;
+    }
+
+    .info-label {
+        color: #64748b;
+        font-size: 14px;
+        margin-bottom: 4px;
+    }
+
+    .info-value {
+        color: #0f172a;
+        font-size: 17px;
+        font-weight: 700;
+    }
+
+    .details-actions {
+        border-top: 1px solid #e2e8f0;
+        padding-top: 28px;
+        display: flex;
+        gap: 16px;
+    }
+
+    .btn-primary-action,
+    .btn-reserve-action,
+    .btn-back {
+        height: 52px;
+        padding: 0 26px;
+        border-radius: 10px;
+        font-weight: 800;
+        text-decoration: none;
+        border: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .btn-primary-action {
+        background: #213c9b;
+        color: white;
+    }
+
+    .btn-reserve-action {
+        background: #fb3b08;
+        color: white;
+    }
+
+    .btn-back {
+        background: white;
+        color: #0f172a;
+        border: 1px solid #dbe2ea;
+    }
+
+    .btn-primary-action:hover,
+    .btn-reserve-action:hover {
+        color: white;
+        opacity: .92;
+    }
+
+    .btn-back:hover {
+        color: #0f172a;
+        background: #f8fafc;
+    }
+</style>
+
+<div class="book-details-card">
+
+    <div class="book-hero">
+        <div class="book-icon">
+            <i class="fa-solid fa-book-open"></i>
+        </div>
+
+        <div>
+            <div class="book-title">@Model.Titre</div>
+            <div class="book-author">@auteurs</div>
+
+            @if (Model.Disponible)
+            {
+                <span class="book-badge available">Disponible</span>
+            }
+            else
+            {
+                <span class="book-badge unavailable">Indisponible</span>
+            }
+        </div>
+    </div>
+
+    <div class="book-body">
+
+        <div class="info-grid">
+
+            <div class="info-item">
+                <div class="info-icon icon-category">
+                    <i class="fa-solid fa-layer-group"></i>
+                </div>
+                <div>
+                    <div class="info-label">Catégorie</div>
+                    <div class="info-value">@Model.Categorie?.NomCategorie</div>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-icon icon-isbn">
+                    <i class="fa-solid fa-hashtag"></i>
+                </div>
+                <div>
+                    <div class="info-label">ISBN</div>
+                    <div class="info-value">@Model.ISBN</div>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-icon icon-year">
+                    <i class="fa-regular fa-calendar"></i>
+                </div>
+                <div>
+                    <div class="info-label">Année de publication</div>
+                    <div class="info-value">@Model.AnneePublication</div>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-icon icon-status">
+                    <i class="fa-solid fa-circle-info"></i>
+                </div>
+                <div>
+                    <div class="info-label">Statut</div>
+                    <div class="info-value">
+                        @(Model.Disponible ? "Disponible en bibliothèque" : "Actuellement indisponible")
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="details-actions">
+
+            @if (Model.Disponible)
+            {
+                <a asp-controller="Student"
+                   asp-action="BorrowBook"
+                   asp-route-id="@Model.IdLivre"
+                   class="btn-primary-action">
+                    <i class="fa-solid fa-circle-check"></i>
+                    Emprunter ce livre
+                </a>
+            }
+            else
+            {
+                <a asp-controller="Student"
+                   asp-action="ReserveBook"
+                   asp-route-id="@Model.IdLivre"
+                   class="btn-reserve-action">
+                    <i class="fa-regular fa-bookmark"></i>
+                    Réserver ce livre
+                </a>
+            }
+
+            <a asp-controller="Student"
+               asp-action="Search"
+               class="btn-back">
+                Retour
+            </a>
+
+        </div>
+
+    </div>
+
+</div>

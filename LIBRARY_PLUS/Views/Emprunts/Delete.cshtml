@@ -1,0 +1,366 @@
+﻿@model LIBRARY_PLUS.Models.Emprunt
+
+@{
+    ViewData["Title"] = "Supprimer un emprunt";
+
+    var aujourdHui = DateTime.Today;
+
+    bool estRendu = Model.DateRemiseEffective.HasValue;
+
+    bool enRetard = estRendu
+        ? Model.DateRemiseEffective!.Value.Date > Model.DateRemisePrevue.Date
+        : Model.DateRemisePrevue.Date < aujourdHui;
+
+    bool remiseProche = !enRetard
+        && !estRendu
+        && (Model.DateRemisePrevue.Date - aujourdHui).Days <= 2;
+
+    var statusText = estRendu ? "Rendu"
+        : enRetard ? "En retard"
+        : remiseProche ? "Alerte J-2"
+        : "En cours";
+
+    var statusClass = estRendu ? "status-returned"
+        : enRetard ? "status-late"
+        : remiseProche ? "status-warning"
+        : "status-current";
+}
+
+<style>
+    .delete-page {
+        max-width: 950px;
+        margin: 0 auto;
+    }
+
+    .delete-header {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        margin-bottom: 28px;
+    }
+
+    .back-link {
+        color: #0f172a;
+        font-size: 22px;
+        text-decoration: none;
+    }
+
+    .delete-title {
+        font-size: 28px;
+        font-weight: 700;
+        color: #dc2626;
+        margin: 0;
+    }
+
+    .delete-subtitle {
+        color: #64748b;
+        margin: 3px 0 0;
+    }
+
+    .delete-card {
+        background: white;
+        border: 1px solid #fecaca;
+        border-radius: 16px;
+        overflow: hidden;
+    }
+
+    .delete-hero {
+        background: linear-gradient(135deg, #dc2626, #ef4444);
+        color: white;
+        padding: 36px;
+        display: flex;
+        align-items: center;
+        gap: 24px;
+    }
+
+    .delete-icon {
+        width: 110px;
+        height: 110px;
+        border-radius: 24px;
+        background: rgba(255,255,255,0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 42px;
+    }
+
+    .delete-book-title {
+        font-size: 34px;
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    .delete-student {
+        font-size: 17px;
+        opacity: 0.92;
+        margin-bottom: 14px;
+    }
+
+    .status-badge {
+        display: inline-block;
+        padding: 7px 14px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .status-current {
+        background: #dbeafe;
+        color: #2563eb;
+    }
+
+    .status-warning {
+        background: #ffedd5;
+        color: #ea580c;
+    }
+
+    .status-late {
+        background: #fee2e2;
+        color: #dc2626;
+    }
+
+    .status-returned {
+        background: #dcfce7;
+        color: #15803d;
+    }
+
+    .delete-body {
+        padding: 34px;
+    }
+
+    .warning-box {
+        background: #fff7ed;
+        border: 1px solid #fdba74;
+        color: #c2410c;
+        border-radius: 12px;
+        padding: 18px;
+        font-weight: 600;
+        margin-bottom: 28px;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 22px;
+    }
+
+    .info-item {
+        background: #f8fafc;
+        border-radius: 14px;
+        padding: 22px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .info-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 19px;
+    }
+
+    .icon-student {
+        background: #eef2ff;
+        color: #4f46e5;
+    }
+
+    .icon-book {
+        background: #ecfdf5;
+        color: #16a34a;
+    }
+
+    .icon-date {
+        background: #faf5ff;
+        color: #9333ea;
+    }
+
+    .icon-return {
+        background: #fee2e2;
+        color: #dc2626;
+    }
+
+    .info-label {
+        color: #64748b;
+        font-size: 14px;
+        margin-bottom: 4px;
+    }
+
+    .info-value {
+        color: #0f172a;
+        font-size: 17px;
+        font-weight: 600;
+    }
+
+    .details-divider {
+        border-top: 1px solid #e2e8f0;
+        margin: 34px 0 28px;
+    }
+
+    .delete-actions {
+        display: flex;
+        gap: 16px;
+    }
+
+    .btn-delete {
+        background: #dc2626;
+        color: white;
+        border: none;
+        padding: 14px 26px;
+        border-radius: 10px;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+        .btn-delete:hover {
+            background: #b91c1c;
+        }
+
+    .btn-cancel {
+        background: white;
+        color: #0f172a;
+        text-decoration: none;
+        padding: 14px 26px;
+        border-radius: 10px;
+        border: 1px solid #dbe2ea;
+        font-weight: 600;
+    }
+
+        .btn-cancel:hover {
+            background: #f8fafc;
+            color: #0f172a;
+        }
+</style>
+
+<div class="delete-page">
+
+    <div class="delete-header">
+        <a asp-action="Index" class="back-link">
+            <i class="fa-solid fa-arrow-left"></i>
+        </a>
+
+        <div>
+            <h1 class="delete-title">Supprimer un emprunt</h1>
+            <p class="delete-subtitle">
+                Cette action est irréversible
+            </p>
+        </div>
+    </div>
+
+    <div class="delete-card">
+
+        <div class="delete-hero">
+
+            <div class="delete-icon">
+                <i class="fa-solid fa-trash-can"></i>
+            </div>
+
+            <div>
+                <div class="delete-book-title">
+                    @Model.Livre?.Titre
+                </div>
+
+                <div class="delete-student">
+                    @Model.Etudiant?.Prenom @Model.Etudiant?.Nom
+                </div>
+
+                <span class="status-badge @statusClass">
+                    @statusText
+                </span>
+            </div>
+
+        </div>
+
+        <div class="delete-body">
+
+            <div class="warning-box">
+                ⚠️ Êtes-vous sûr de vouloir supprimer cet emprunt ?
+            </div>
+
+            <div class="info-grid">
+
+                <div class="info-item">
+                    <div class="info-icon icon-student">
+                        <i class="fa-solid fa-user-graduate"></i>
+                    </div>
+
+                    <div>
+                        <div class="info-label">Étudiant</div>
+                        <div class="info-value">
+                            @Model.Etudiant?.Prenom @Model.Etudiant?.Nom
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-icon icon-book">
+                        <i class="fa-solid fa-book-open"></i>
+                    </div>
+
+                    <div>
+                        <div class="info-label">Livre</div>
+                        <div class="info-value">
+                            @Model.Livre?.Titre
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-icon icon-date">
+                        <i class="fa-regular fa-calendar"></i>
+                    </div>
+
+                    <div>
+                        <div class="info-label">Date d'emprunt</div>
+                        <div class="info-value">
+                            @Model.DateEmprunt.ToString("dd/MM/yyyy")
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-icon icon-return">
+                        <i class="fa-solid fa-rotate-left"></i>
+                    </div>
+
+                    <div>
+                        <div class="info-label">Date remise prévue</div>
+                        <div class="info-value">
+                            @Model.DateRemisePrevue.ToString("dd/MM/yyyy")
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="details-divider"></div>
+
+            <form asp-action="Delete">
+
+                <input type="hidden" asp-for="IdEmprunt" />
+
+                <div class="delete-actions">
+
+                    <button type="submit" class="btn-delete">
+                        <i class="fa-solid fa-trash-can"></i>
+                        Supprimer
+                    </button>
+
+                    <a asp-action="Index" class="btn-cancel">
+                        Annuler
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>

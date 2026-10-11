@@ -1,0 +1,378 @@
+﻿@model LIBRARY_PLUS.Models.ViewModels.StudentDashboardViewModel
+
+@{
+    Layout = "~/Views/Shared/_StudentLayout.cshtml";
+    ViewData["Title"] = "Accueil";
+
+    var today = DateTime.Today;
+}
+
+<style>
+    .welcome-card {
+        background: linear-gradient(135deg, #213c9b, #1d4ed8);
+        border-radius: 14px;
+        padding: 42px;
+        color: white;
+        margin-bottom: 28px;
+    }
+
+        .welcome-card h1 {
+            font-size: 34px;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .welcome-card p {
+            font-size: 18px;
+            margin: 0;
+            opacity: .95;
+        }
+
+    .student-alert {
+        background: #fff7ed;
+        border: 1px solid #fdba74;
+        color: #c2410c;
+        border-radius: 12px;
+        padding: 18px 22px;
+        margin-bottom: 28px;
+        font-weight: 500;
+    }
+
+    .student-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 28px;
+        margin-bottom: 28px;
+    }
+
+    .student-stat-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        padding: 26px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .stat-label {
+        color: #64748b;
+        font-size: 16px;
+        margin-bottom: 8px;
+    }
+
+    .stat-value {
+        font-size: 36px;
+        font-weight: 600;
+        color: #0f172a;
+    }
+
+    .stat-icon {
+        width: 58px;
+        height: 58px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+    }
+
+    .icon-blue {
+        background: #eff6ff;
+        color: #2563eb;
+    }
+
+    .icon-orange {
+        background: #fff7ed;
+        color: #ea580c;
+    }
+
+    .icon-green {
+        background: #ecfdf5;
+        color: #16a34a;
+    }
+
+    .student-section-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        padding: 30px;
+        margin-bottom: 28px;
+    }
+
+    .section-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+    }
+
+    .section-title {
+        font-size: 22px;
+        font-weight: 800;
+        color: #0f172a;
+        margin: 0;
+    }
+
+    .see-all {
+        color: #213c9b;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .loan-item,
+    .reservation-item {
+        background: #f1f5f9;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 20px 22px;
+        margin-bottom: 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .loan-warning {
+        background: #fff7ed;
+        border-color: #fdba74;
+    }
+
+    .item-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #0f172a;
+        margin-bottom: 6px;
+    }
+
+    .item-author {
+        color: #64748b;
+        margin-bottom: 10px;
+    }
+
+    .item-meta {
+        color: #64748b;
+        font-size: 14px;
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .days-badge {
+        padding: 7px 14px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 700;
+        background: #dbeafe;
+        color: #2563eb;
+        border: 1px solid #bfdbfe;
+        white-space: nowrap;
+    }
+
+    .days-warning {
+        background: #ffedd5;
+        color: #ea580c;
+        border-color: #fed7aa;
+    }
+
+    .reservation-badge {
+        padding: 7px 14px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 700;
+        background: #ffedd5;
+        color: #ea580c;
+        border: 1px solid #fed7aa;
+    }
+
+    .reservation-valid {
+        background: #dcfce7;
+        color: #15803d;
+        border-color: #bbf7d0;
+    }
+
+    .quick-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 28px;
+    }
+
+    .quick-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        padding: 30px;
+        display: flex;
+        align-items: center;
+        gap: 22px;
+        text-decoration: none;
+        color: #0f172a;
+    }
+
+        .quick-card:hover {
+            color: #0f172a;
+            background: #f8fafc;
+        }
+
+    .quick-icon {
+        width: 58px;
+        height: 58px;
+        border-radius: 12px;
+        background: #eef2ff;
+        color: #213c9b;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+    }
+
+    .quick-title {
+        font-size: 19px;
+        font-weight: 800;
+        margin-bottom: 6px;
+    }
+
+    .quick-subtitle {
+        color: #64748b;
+    }
+
+    .empty-text {
+        color: #64748b;
+        margin: 0;
+    }
+</style>
+
+<div class="welcome-card">
+    <h1>Bienvenue, @Model.Etudiant?.Prenom @Model.Etudiant?.Nom</h1>
+    <p>Consultez vos emprunts et découvrez de nouveaux livres</p>
+</div>
+
+@if (Model.HasAlertesProches)
+{
+    <div class="student-alert">
+        <i class="fa-solid fa-triangle-exclamation me-2"></i>
+        Vous avez des livres à rendre bientôt. Pensez à les ramener avant la date limite.
+    </div>
+}
+
+<div class="student-stats">
+    <div class="student-stat-card">
+        <div>
+            <div class="stat-label">Livres empruntés</div>
+            <div class="stat-value">@Model.LivresEmpruntes</div>
+        </div>
+        <div class="stat-icon icon-blue">
+            <i class="fa-solid fa-book-open"></i>
+        </div>
+    </div>
+
+    <div class="student-stat-card">
+        <div>
+            <div class="stat-label">Réservations actives</div>
+            <div class="stat-value">@Model.ReservationsActives</div>
+        </div>
+        <div class="stat-icon icon-orange">
+            <i class="fa-regular fa-bookmark"></i>
+        </div>
+    </div>
+
+    <div class="student-stat-card">
+        <div>
+            <div class="stat-label">Score d'emprunt</div>
+            <div class="stat-value">@Model.ScoreEmprunt</div>
+        </div>
+        <div class="stat-icon icon-green">
+            <i class="fa-solid fa-arrow-trend-up"></i>
+        </div>
+    </div>
+</div>
+
+<div class="student-section-card">
+    <div class="section-head">
+        <h2 class="section-title">Mes emprunts en cours</h2>
+        <a asp-controller="Student" asp-action="Emprunts" class="see-all">Voir tout</a>
+    </div>
+
+    @if (Model.EmpruntsEnCours.Any())
+    {
+        @foreach (var item in Model.EmpruntsEnCours.Take(3))
+        {
+            var joursRestants = (item.DateRemisePrevue.Date - today).Days;
+            var warning = joursRestants <= 2;
+
+            <div class="loan-item @(warning ? "loan-warning" : "")">
+                <div>
+                    <div class="item-title">@item.Livre?.Titre</div>
+                    <div class="item-author">Livre emprunté</div>
+                    <div class="item-meta">
+                        <span>Emprunté le @item.DateEmprunt.ToString("dd/MM/yyyy")</span>
+                        <span>À rendre le @item.DateRemisePrevue.ToString("dd/MM/yyyy")</span>
+                    </div>
+                </div>
+
+                <span class="days-badge @(warning ? "days-warning" : "")">
+                    @joursRestants j restants
+                </span>
+            </div>
+        }
+    }
+    else
+    {
+        <p class="empty-text">Aucun emprunt en cours.</p>
+    }
+</div>
+
+<div class="student-section-card">
+    <div class="section-head">
+        <h2 class="section-title">Mes réservations</h2>
+        <a asp-controller="Student" asp-action="Reservations" class="see-all">Voir tout</a>
+    </div>
+
+    @if (Model.Reservations.Any())
+    {
+        @foreach (var item in Model.Reservations)
+        {
+            var statut = item.Statut ?? "En attente";
+            var valid = statut.ToLower().Contains("valid");
+
+            <div class="reservation-item">
+                <div>
+                    <div class="item-title">@item.Livre?.Titre</div>
+                    <div class="item-author">Réservation</div>
+                    <div class="item-meta">
+                        <span>Réservé le @item.DateReservation.ToString("dd/MM/yyyy")</span>
+                    </div>
+                </div>
+
+                <span class="reservation-badge @(valid ? "reservation-valid" : "")">
+                    @statut
+                </span>
+            </div>
+        }
+    }
+    else
+    {
+        <p class="empty-text">Aucune réservation.</p>
+    }
+</div>
+
+<div class="quick-actions">
+    <a asp-controller="Student" asp-action="Search" class="quick-card">
+        <div class="quick-icon">
+            <i class="fa-regular fa-book-open"></i>
+        </div>
+        <div>
+            <div class="quick-title">Rechercher des livres</div>
+            <div class="quick-subtitle">Parcourez notre catalogue</div>
+        </div>
+    </a>
+
+    <a asp-controller="Student" asp-action="Emprunts" class="quick-card">
+        <div class="quick-icon">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+        </div>
+        <div>
+            <div class="quick-title">Historique d'emprunts</div>
+            <div class="quick-subtitle">Consultez vos emprunts passés</div>
+        </div>
+    </a>
+</div>

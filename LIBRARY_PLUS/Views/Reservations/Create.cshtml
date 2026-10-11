@@ -1,0 +1,218 @@
+﻿@model LIBRARY_PLUS.Models.Reservation
+
+@{
+    ViewData["Title"] = "Ajouter une réservation";
+}
+
+<style>
+    .reservation-form-page {
+        max-width: 1100px;
+        margin: auto;
+    }
+
+    .reservation-form-header {
+        display: flex;
+        align-items: flex-start;
+        gap: 18px;
+        margin-bottom: 30px;
+    }
+
+    .back-btn {
+        width: 42px;
+        height: 42px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #0f172a;
+        text-decoration: none;
+        font-size: 20px;
+    }
+
+    .reservation-form-header h1 {
+        font-size: 42px;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 4px;
+    }
+
+    .reservation-form-header p {
+        color: #64748b;
+        font-size: 18px;
+        margin: 0;
+    }
+
+    .reservation-form-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 18px;
+        padding: 42px;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 28px;
+    }
+
+    .reservation-form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+        .reservation-form-group label {
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+        .reservation-form-group input,
+        .reservation-form-group select {
+            height: 58px;
+            border: 1px solid #dbe2ea;
+            border-radius: 12px;
+            padding: 0 18px;
+            font-size: 16px;
+            color: #334155;
+            background: white;
+        }
+
+            .reservation-form-group input:focus,
+            .reservation-form-group select:focus {
+                outline: none;
+                border-color: #213c9b;
+                box-shadow: 0 0 0 4px rgba(33,60,155,0.08);
+            }
+
+    .reservation-actions {
+        display: flex;
+        gap: 18px;
+        margin-top: 40px;
+        padding-top: 30px;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    .btn-create-reservation {
+        height: 56px;
+        padding: 0 28px;
+        border: none;
+        border-radius: 12px;
+        background: #213c9b;
+        color: white;
+        font-size: 16px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+        .btn-create-reservation:hover {
+            background: #1d3588;
+        }
+
+    .btn-cancel-reservation {
+        height: 56px;
+        padding: 0 28px;
+        border-radius: 12px;
+        border: 1px solid #dbe2ea;
+        background: white;
+        color: #334155;
+        text-decoration: none;
+        font-size: 16px;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .text-danger {
+        margin-top: 6px;
+        font-size: 14px;
+    }
+</style>
+
+<div class="reservation-form-page">
+
+    <div class="reservation-form-header">
+
+        <a asp-action="Index" class="back-btn">
+            <i class="fa-solid fa-arrow-left"></i>
+        </a>
+
+        <div>
+            <h1>Ajouter une réservation</h1>
+            <p>Créez une nouvelle réservation</p>
+        </div>
+
+    </div>
+
+    <div class="reservation-form-card">
+
+        <form asp-action="Create">
+
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-4"></div>
+
+            <div class="form-grid">
+
+                <div class="reservation-form-group">
+                    <label asp-for="DateReservation">Date de réservation *</label>
+
+                    <input asp-for="DateReservation" type="date" />
+
+                    <span asp-validation-for="DateReservation" class="text-danger"></span>
+                </div>
+
+                <div class="reservation-form-group">
+                    <label asp-for="Statut">Statut *</label>
+
+                    <select asp-for="Statut">
+                        <option value="En attente">En attente</option>
+                        <option value="Validée">Validée</option>
+                        <option value="Refusée">Refusée</option>
+                    </select>
+
+                    <span asp-validation-for="Statut" class="text-danger"></span>
+                </div>
+
+                <div class="reservation-form-group">
+                    <label asp-for="IdLivre">Livre *</label>
+
+                    <select asp-for="IdLivre" asp-items="ViewBag.IdLivre">
+                        <option value="">-- Sélectionner un livre --</option>
+                    </select>
+                </div>
+
+                <div class="reservation-form-group">
+                    <label asp-for="IdEtudiant">Étudiant *</label>
+
+                    <select asp-for="IdEtudiant" asp-items="ViewBag.IdEtudiant">
+                        <option value="">-- Sélectionner un étudiant --</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="reservation-actions">
+
+                <button type="submit" class="btn-create-reservation">
+                    <i class="fa-regular fa-floppy-disk"></i>
+                    Créer
+                </button>
+
+                <a asp-action="Index" class="btn-cancel-reservation">
+                    Annuler
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

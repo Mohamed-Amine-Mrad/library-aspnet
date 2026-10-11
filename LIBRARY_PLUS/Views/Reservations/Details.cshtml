@@ -1,0 +1,310 @@
+﻿@model LIBRARY_PLUS.Models.Reservation
+
+@{
+    ViewData["Title"] = "Détails de la réservation";
+
+    var statut = Model.Statut ?? "";
+    var statusClass = statut.ToLower().Contains("valid") ? "status-valid"
+        : statut.ToLower().Contains("refus") ? "status-cancel"
+        : "status-pending";
+}
+
+<style>
+    .details-page {
+        max-width: 950px;
+        margin: 0 auto;
+    }
+
+    .details-header {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        margin-bottom: 28px;
+    }
+
+    .back-link {
+        color: #0f172a;
+        font-size: 22px;
+        text-decoration: none;
+    }
+
+    .details-title {
+        font-size: 28px;
+        font-weight: 700;
+        color: #0f172a;
+        margin: 0;
+    }
+
+    .details-subtitle {
+        color: #64748b;
+        margin: 3px 0 0;
+    }
+
+    .details-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        overflow: hidden;
+    }
+
+    .reservation-hero {
+        background: linear-gradient(135deg, #213c9b, #1d4ed8);
+        color: white;
+        padding: 36px;
+        display: flex;
+        align-items: center;
+        gap: 24px;
+    }
+
+    .reservation-icon {
+        width: 112px;
+        height: 112px;
+        border-radius: 24px;
+        background: rgba(255,255,255,0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 44px;
+    }
+
+    .reservation-title {
+        font-size: 34px;
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    .reservation-sub {
+        font-size: 17px;
+        opacity: 0.92;
+        margin-bottom: 14px;
+    }
+
+    .status-badge {
+        display: inline-block;
+        padding: 7px 14px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .status-valid {
+        background: #dcfce7;
+        color: #15803d;
+    }
+
+    .status-pending {
+        background: #ffedd5;
+        color: #ea580c;
+    }
+
+    .status-cancel {
+        background: #fee2e2;
+        color: #dc2626;
+    }
+
+    .details-body {
+        padding: 34px;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+    }
+
+    .info-item {
+        background: #f8fafc;
+        border-radius: 14px;
+        padding: 22px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .info-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 19px;
+    }
+
+    .icon-student {
+        background: #eef2ff;
+        color: #4f46e5;
+    }
+
+    .icon-book {
+        background: #ecfdf5;
+        color: #16a34a;
+    }
+
+    .icon-date {
+        background: #faf5ff;
+        color: #9333ea;
+    }
+
+    .icon-status {
+        background: #fff7ed;
+        color: #ea580c;
+    }
+
+    .info-label {
+        color: #64748b;
+        font-size: 14px;
+        margin-bottom: 4px;
+    }
+
+    .info-value {
+        color: #0f172a;
+        font-size: 17px;
+        font-weight: 600;
+    }
+
+    .details-divider {
+        border-top: 1px solid #e2e8f0;
+        margin: 32px 0 28px;
+    }
+
+    .details-actions {
+        display: flex;
+        gap: 16px;
+    }
+
+    .btn-edit {
+        background: #213c9b;
+        color: white;
+        text-decoration: none;
+        padding: 14px 26px;
+        border-radius: 10px;
+        font-weight: 700;
+    }
+
+        .btn-edit:hover {
+            background: #1d3588;
+            color: white;
+        }
+
+    .btn-back {
+        background: white;
+        color: #0f172a;
+        text-decoration: none;
+        padding: 14px 26px;
+        border-radius: 10px;
+        border: 1px solid #dbe2ea;
+        font-weight: 600;
+    }
+
+        .btn-back:hover {
+            background: #f8fafc;
+            color: #0f172a;
+        }
+</style>
+
+<div class="details-page">
+
+    <div class="details-header">
+        <a asp-action="Index" class="back-link">
+            <i class="fa-solid fa-arrow-left"></i>
+        </a>
+
+        <div>
+            <h1 class="details-title">Détails de la réservation</h1>
+            <p class="details-subtitle">Informations complètes</p>
+        </div>
+    </div>
+
+    <div class="details-card">
+
+        <div class="reservation-hero">
+            <div class="reservation-icon">
+                <i class="fa-regular fa-bookmark"></i>
+            </div>
+
+            <div>
+                <div class="reservation-title">
+                    Réservation #@Model.IdReservation
+                </div>
+
+                <div class="reservation-sub">
+                    @Model.Etudiant?.Prenom @Model.Etudiant?.Nom — @Model.Livre?.Titre
+                </div>
+
+                <span class="status-badge @statusClass">
+                    @Model.Statut
+                </span>
+            </div>
+        </div>
+
+        <div class="details-body">
+
+            <div class="info-grid">
+
+                <div class="info-item">
+                    <div class="info-icon icon-student">
+                        <i class="fa-solid fa-user-graduate"></i>
+                    </div>
+
+                    <div>
+                        <div class="info-label">Étudiant</div>
+                        <div class="info-value">@Model.Etudiant?.Prenom @Model.Etudiant?.Nom</div>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-icon icon-book">
+                        <i class="fa-solid fa-book-open"></i>
+                    </div>
+
+                    <div>
+                        <div class="info-label">Livre</div>
+                        <div class="info-value">@Model.Livre?.Titre</div>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-icon icon-date">
+                        <i class="fa-regular fa-calendar"></i>
+                    </div>
+
+                    <div>
+                        <div class="info-label">Date de réservation</div>
+                        <div class="info-value">@Model.DateReservation.ToString("dd/MM/yyyy")</div>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-icon icon-status">
+                        <i class="fa-solid fa-circle-info"></i>
+                    </div>
+
+                    <div>
+                        <div class="info-label">Statut</div>
+                        <div class="info-value">@Model.Statut</div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="details-divider"></div>
+
+            <div class="details-actions">
+                <a asp-action="Edit"
+                   asp-route-id="@Model.IdReservation"
+                   class="btn-edit">
+                    Modifier cette réservation
+                </a>
+
+                <a asp-action="Index"
+                   class="btn-back">
+                    Retour à la liste
+                </a>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

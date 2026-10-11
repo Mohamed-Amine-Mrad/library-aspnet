@@ -1,0 +1,274 @@
+﻿@model IEnumerable<LIBRARY_PLUS.Models.Etudiant>
+
+@{
+    ViewData["Title"] = "Étudiants";
+}
+
+<style>
+    .students-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 26px;
+    }
+
+    .students-count {
+        color: #64748b;
+        font-size: 18px;
+        font-weight: 500;
+    }
+
+    .add-student-btn {
+        background: #213c9b;
+        color: white;
+        border-radius: 12px;
+        padding: 13px 24px;
+        text-decoration: none;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+        .add-student-btn:hover {
+            color: white;
+            background: #1d3588;
+        }
+
+    .search-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+
+    .search-input-wrapper {
+        position: relative;
+        max-width: 580px;
+    }
+
+    .search-icon {
+        position: absolute;
+        left: 18px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #64748b;
+        font-size: 18px;
+    }
+
+    .student-search {
+        height: 52px;
+        border: 1px solid #dbe2ea;
+        border-radius: 10px;
+        padding: 0 18px 0 54px;
+        font-size: 16px;
+        color: #334155;
+        width: 100%;
+        background: white;
+    }
+
+        .student-search:focus {
+            outline: none;
+            border-color: #213c9b;
+            box-shadow: 0 0 0 4px rgba(33,60,155,0.08);
+        }
+
+    .table-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        overflow: hidden;
+    }
+
+    .students-table {
+        width: 100%;
+        margin: 0;
+        border-collapse: collapse;
+    }
+
+        .students-table thead {
+            background: #f1f5f9;
+        }
+
+        .students-table th {
+            padding: 18px 30px;
+            color: #64748b;
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .students-table td {
+            padding: 22px 30px;
+            color: #475569;
+            font-size: 16px;
+            border-top: 1px solid #e2e8f0;
+            vertical-align: middle;
+        }
+
+    .student-name {
+        color: #0f172a;
+        font-weight: 500;
+    }
+
+    .score-number {
+        color: #0f172a;
+        font-weight: 600;
+        margin-bottom: 6px;
+    }
+
+    .score-badge {
+        display: inline-block;
+        padding: 6px 14px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .score-excellent {
+        background: #dcfce7;
+        color: #16a34a;
+        border: 1px solid #bbf7d0;
+    }
+
+    .score-good {
+        background: #dbeafe;
+        color: #2563eb;
+        border: 1px solid #bfdbfe;
+    }
+
+    .score-medium {
+        background: #fef3c7;
+        color: #d97706;
+        border: 1px solid #fde68a;
+    }
+
+    .score-low {
+        background: #fee2e2;
+        color: #dc2626;
+        border: 1px solid #fecaca;
+    }
+
+    .actions {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+    }
+
+        .actions a {
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+    .action-view {
+        color: #2563eb;
+    }
+
+    .action-edit {
+        color: #16a34a;
+    }
+
+    .action-delete {
+        color: #dc2626;
+    }
+
+    .students-table tbody tr:hover {
+        background: #f8fafc;
+    }
+</style>
+
+<div class="students-top">
+    <div class="students-count">
+        @Model.Count() étudiant(s) trouvé(s)
+    </div>
+
+    <a asp-action="Create" class="add-student-btn">
+        <i class="fa-solid fa-plus"></i>
+        Ajouter un étudiant
+    </a>
+</div>
+
+<div class="search-card">
+    <div class="search-input-wrapper">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+
+        <input id="studentSearch"
+               type="text"
+               class="student-search"
+               placeholder="Rechercher un étudiant..." />
+    </div>
+</div>
+
+<div class="table-card">
+    <table class="students-table">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Email</th>
+                <th>Classe</th>
+                <th>Score</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model)
+            {
+                var scoreLabel = item.ScoreEmprunt >= 20 ? "Excellent"
+                : item.ScoreEmprunt >= 10 ? "Bien"
+                : item.ScoreEmprunt > 0 ? "Moyen"
+                : "Nouveau";
+
+                var scoreClass = item.ScoreEmprunt >= 20 ? "score-excellent"
+                : item.ScoreEmprunt >= 10 ? "score-good"
+                : item.ScoreEmprunt > 0 ? "score-medium"
+                : "score-low";
+
+                <tr class="student-row">
+                    <td class="student-name">@item.Nom</td>
+                    <td>@item.Prenom</td>
+                    <td>@item.Email</td>
+                    <td>@item.Classe</td>
+
+                    <td>
+                        <div class="score-number">@item.ScoreEmprunt</div>
+                        <span class="score-badge @scoreClass">@scoreLabel</span>
+                    </td>
+
+                    <td>
+                        <div class="actions">
+                            <a asp-action="Details" asp-route-id="@item.IdEtudiant" class="action-view">
+                                <i class="fa-solid fa-eye"></i>
+                            </a>
+
+                            <a asp-action="Edit" asp-route-id="@item.IdEtudiant" class="action-edit">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </a>
+
+                            <a asp-action="Delete" asp-route-id="@item.IdEtudiant" class="action-delete">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const input = document.getElementById("studentSearch");
+        const rows = document.querySelectorAll(".student-row");
+
+        input.addEventListener("input", function () {
+            const search = input.value.toLowerCase().trim();
+
+            rows.forEach(function (row) {
+                const text = row.innerText.toLowerCase();
+                row.style.display = text.includes(search) ? "" : "none";
+            });
+        });
+    });
+</script>

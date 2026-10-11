@@ -1,0 +1,670 @@
+﻿@model LIBRARY_PLUS.Models.ViewModels.DashboardViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<style>
+    <style >
+
+    .dashboard-title {
+        font-size: 32px;
+        font-weight: 700;
+        color: #111827;
+        margin-bottom: 4px;
+        letter-spacing: -0.5px;
+    }
+
+    .dashboard-subtitle {
+        color: #6b7280;
+        margin-bottom: 24px;
+        font-size: 15px;
+        font-weight: 400;
+    }
+
+    /* TOP ALERT */
+
+    .summary-danger {
+        border: 1px solid #fecaca;
+        border-radius: 16px;
+        background: #fef2f2;
+        color: #b91c1c;
+        padding: 16px 20px;
+        margin-bottom: 28px;
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    /* STATS CARDS */
+
+    .stats-card {
+        border: 1px solid #e5e7eb;
+        border-radius: 22px;
+        background: white;
+        transition: 0.2s;
+        overflow: hidden;
+    }
+
+        .stats-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 24px rgba(15,23,42,0.06);
+        }
+
+        .stats-card .card-body {
+            padding: 24px;
+        }
+
+    .stats-label {
+        color: #64748b;
+        font-size: 15px;
+        margin-bottom: 10px;
+        font-weight: 500;
+    }
+
+    .stats-value {
+        font-size: 32px;
+        font-weight: 700;
+        color: #0f172a;
+        margin: 0;
+    }
+
+    .stat-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .stat-icon {
+        width: 58px;
+        height: 58px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+    }
+
+    .icon-blue {
+        background: #eff6ff;
+        color: #2563eb;
+    }
+
+    .icon-green {
+        background: #ecfdf5;
+        color: #16a34a;
+    }
+
+    .icon-purple {
+        background: #faf5ff;
+        color: #9333ea;
+    }
+
+    .icon-orange {
+        background: #fff7ed;
+        color: #ea580c;
+    }
+
+    /* PANELS */
+
+    .dashboard-panel {
+        border: 1px solid #e5e7eb;
+        border-radius: 24px;
+        background: white;
+        overflow: hidden;
+    }
+
+        .dashboard-panel .card-body {
+            padding: 26px;
+        }
+
+    .panel-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 22px;
+    }
+
+    /* TABLES */
+
+    .custom-table thead th {
+        font-size: 14px;
+        color: #64748b;
+        border-bottom: 1px solid #e2e8f0;
+        background-color: transparent;
+        padding-bottom: 16px;
+        font-weight: 600;
+    }
+
+    .custom-table tbody td {
+        vertical-align: middle;
+        font-size: 14px;
+        color: #334155;
+        padding-top: 16px;
+        padding-bottom: 16px;
+        font-weight: 500;
+    }
+
+    /* TOP BOOKS */
+
+    .rank-list {
+        padding-left: 0;
+        list-style: none;
+        margin: 0;
+    }
+
+        .rank-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 22px;
+        }
+
+    .rank-item {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .rank-number {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: #213c9b;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 14px;
+    }
+
+    .rank-title {
+        font-weight: 600;
+        color: #0f172a;
+        font-size: 15px;
+    }
+
+    .rank-meta {
+        color: #64748b;
+        font-size: 13px;
+    }
+
+    .bar-chart {
+        height: 270px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        gap: 42px;
+        padding: 20px 30px 0;
+        margin-bottom: 75px;
+        border-left: 1px solid #cbd5e1;
+        border-bottom: 1px solid #cbd5e1;
+        position: relative;
+        overflow: visible;
+        background-image: repeating-linear-gradient( to top, transparent 0, transparent 52px, #e2e8f0 53px );
+    }
+
+    .bar-item {
+        width: 90px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        align-items: center;
+        position: relative;
+    }
+
+    .bar {
+        width: 58px;
+        min-height: 24px;
+        background: linear-gradient(180deg, #2448b8, #1e3a8a);
+        border-radius: 10px 10px 0 0;
+    }
+
+    .bar-value {
+        font-size: 13px;
+        font-weight: 800;
+        color: #1e3a8a;
+        margin-bottom: 8px;
+    }
+
+    .bar-label {
+        position: absolute;
+        bottom: -58px;
+        width: 95px;
+        text-align: center;
+        font-size: 12px;
+        line-height: 1.2;
+        color: #64748b;
+        transform: rotate(-35deg);
+    }
+
+    .y-axis-labels {
+        position: absolute;
+        left: -28px;
+        top: 0;
+        height: 100%;
+        display: flex;
+        flex-direction: column-reverse;
+        justify-content: space-between;
+        color: #64748b;
+        font-size: 12px;
+        font-weight: 500;
+    }
+
+    .top-books-list {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    .top-book-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .top-book-left {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .top-rank {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background: #213c9b;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+    }
+
+    .top-book-title {
+        font-weight: 600;
+        color: #0f172a;
+        font-size: 15px;
+    }
+
+    .top-book-author {
+        color: #64748b;
+        font-size: 13px;
+    }
+
+    .top-book-count {
+        text-align: right;
+        color: #0f172a;
+    }
+
+        .top-book-count span {
+            display: block;
+            color: #64748b;
+            font-size: 13px;
+        }
+
+    /* ALERT BOXES */
+
+    .alert-box-warning,
+    .alert-box-danger {
+        border-radius: 16px;
+        padding: 18px;
+        margin-bottom: 14px;
+    }
+
+    .alert-box-warning {
+        background: #fff7ed;
+        border: 1px solid #fdba74;
+    }
+
+    .alert-box-danger {
+        background: #fef2f2;
+        border: 1px solid #fca5a5;
+    }
+
+    .alert-student {
+        font-weight: 600;
+        color: #111827;
+        font-size: 15px;
+        margin-bottom: 3px;
+    }
+
+    .alert-book {
+        color: #64748b;
+        margin-bottom: 8px;
+        font-size: 14px;
+    }
+
+    .alert-date-warning {
+        color: #c2410c;
+        font-weight: 600;
+        font-size: 13px;
+    }
+
+    .alert-date-danger {
+        color: #dc2626;
+        font-weight: 600;
+        font-size: 13px;
+    }
+
+    /* BADGES */
+
+    .section-badge {
+        border-radius: 999px;
+        padding: 7px 13px;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    /* SCORE */
+
+    .score-badge {
+        border-radius: 999px;
+        padding: 7px 12px;
+        font-size: 12px;
+        font-weight: 700;
+        display: inline-block;
+    }
+
+    .score-excellent {
+        background-color: #dcfce7;
+        color: #166534;
+    }
+
+    .score-tresbien {
+        background-color: #dbeafe;
+        color: #1d4ed8;
+    }
+
+    .score-bien {
+        background-color: #e0f2fe;
+        color: #0369a1;
+    }
+
+    .score-moyen {
+        background-color: #e5e7eb;
+        color: #374151;
+    }
+
+</style>
+</style>
+
+<div class="container-fluid">
+    <div class="mb-4">
+        <div class="dashboard-title">Dashboard Administrateur</div>
+        <div class="dashboard-subtitle">Vue globale sur les livres, les emprunts, les alertes et l’activité des étudiants.</div>
+    </div>
+
+    @if (Model.EmpruntsEnRetard.Any())
+    {
+        <div class="summary-danger">
+            Attention : @Model.EmpruntsEnRetard.Count emprunt(s) en retard nécessitent une intervention.
+        </div>
+    }
+
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card stats-card">
+                <div class="card-body stat-content">
+                    <div>
+                        <div class="stats-label">Livres</div>
+                        <p class="stats-value">@Model.NombreLivres</p>
+                    </div>
+                    <div class="stat-icon icon-blue">
+                        <i class="fa-solid fa-book-open"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card stats-card">
+                <div class="card-body stat-content">
+                    <div>
+                        <div class="stats-label">Auteurs</div>
+                        <p class="stats-value">@Model.NombreAuteurs</p>
+                    </div>
+                    <div class="stat-icon icon-green">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card stats-card">
+                <div class="card-body stat-content">
+                    <div>
+                        <div class="stats-label">Catégories</div>
+                        <p class="stats-value">@Model.NombreCategories</p>
+                    </div>
+                    <div class="stat-icon icon-purple">
+                        <i class="fa-solid fa-layer-group"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card stats-card">
+                <div class="card-body stat-content">
+                    <div>
+                        <div class="stats-label">Emprunts actifs</div>
+                        <p class="stats-value">@Model.NombreEmprunts</p>
+                    </div>
+                    <div class="stat-icon icon-orange">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-lg-6 mb-3">
+            <div class="card dashboard-panel">
+                <div class="card-body">
+                    <div class="panel-title">
+                        <i class="fa-solid fa-arrow-trend-up text-primary me-2"></i>
+                        Emprunts par livre
+                    </div>
+
+                    @if (Model.EmpruntsParLivre.Any())
+                    {
+                        var maxValue = Model.EmpruntsParLivre.Max(x => x.NombreEmprunts);
+                        var axisMax = Math.Max(5, maxValue);
+
+                        <div class="bar-chart">
+
+                                <div class="y-axis-labels">
+                                    <span>0</span>
+                                    <span>1</span>
+                                    <span>2</span>
+                                    <span>3</span>
+                                    <span>4</span>
+                                    <span>5</span>
+                                </div>
+                            @foreach (var item in Model.EmpruntsParLivre.Take(6))
+                            {
+                                var height = axisMax > 0 ? (item.NombreEmprunts * 100 / axisMax) : 0;
+
+                                <div class="bar-item">
+                                    <div class="bar-value">@item.NombreEmprunts</div>
+                                    <div class="bar" style="height:@height%;"></div>
+                                    <div class="bar-label">@item.TitreLivre</div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted mb-0">Aucune statistique disponible pour le moment.</p>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6 mb-3">
+            <div class="card dashboard-panel">
+                <div class="card-body">
+                    <div class="panel-title">Top 5 des livres les plus empruntés</div>
+
+                    @if (Model.Top5Livres.Any())
+                    {
+                        <div class="top-books-list">
+                            @{
+                                var rank = 1;
+                            }
+
+                            @foreach (var item in Model.Top5Livres.Take(5))
+                            {
+                                <div class="top-book-item">
+                                    <div class="top-book-left">
+                                        <div class="top-rank">@rank</div>
+                                        <div>
+                                            <div class="top-book-title">@item.TitreLivre</div>
+                                            <div class="top-book-author">Livre populaire</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="top-book-count">
+                                        <strong>@item.NombreEmprunts</strong>
+                                        <span>emprunts</span>
+                                    </div>
+                                </div>
+
+                                rank++;
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted mb-0">Aucune donnée disponible.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-lg-7 mb-3">
+            <div class="card dashboard-panel">
+                <div class="card-body">
+                    <div class="panel-title">Scoring des étudiants</div>
+
+                    @if (Model.ScoringEtudiants.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table custom-table align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Étudiant</th>
+                                        <th>Classe</th>
+                                        <th>Emprunts</th>
+                                        <th>Dans les délais</th>
+                                        <th>Niveau</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.ScoringEtudiants)
+                                    {
+                                        var scoreClass = item.NiveauScore == "Excellent"
+                                        ? "score-badge score-excellent"
+                                        : item.NiveauScore == "Très bien"
+                                        ? "score-badge score-tresbien"
+                                        : item.NiveauScore == "Bien"
+                                        ? "score-badge score-bien"
+                                        : "score-badge score-moyen";
+
+                                        <tr>
+                                            <td>@item.NomComplet</td>
+
+                                            <td>@item.Classe</td>
+
+                                            <td>
+                                                <strong>@item.NombreEmprunts</strong>
+                                            </td>
+
+                                            <td>
+                                                <span class="badge bg-success">
+                                                    @item.NombreEmpruntsReglesDansLesDelais
+                                                </span>
+                                            </td>
+
+                                            <td>
+                                                <span class="@scoreClass">
+                                                    @item.NiveauScore
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted mb-0">Aucun scoring disponible.</p>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-5 mb-3">
+            <div class="card dashboard-panel mb-3">
+                <div class="card-body">
+                    <div class="panel-title text-warning">Alertes remises proches (J-2)</div>
+
+                    @if (Model.AlertesRemisesProches.Any())
+                    {
+                        @foreach (var item in Model.AlertesRemisesProches)
+                        {
+                            <div class="alert-box-warning">
+                                <div class="alert-student">@item.NomEtudiant</div>
+                                <div class="alert-book">@item.TitreLivre</div>
+                                <div class="alert-date-warning">
+                                    À rendre le @item.DateRemisePrevue.ToString("dd/MM/yyyy")
+                                </div>
+                                <span class="section-badge bg-warning text-dark mt-2 d-inline-block">
+                                    @item.JoursRestants jour(s) restant(s)
+                                </span>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p class="text-muted mb-0">Aucune alerte à J-2.</p>
+                    }
+                </div>
+            </div>
+
+            <div class="card dashboard-panel">
+                <div class="card-body">
+                    <div class="panel-title text-danger">Emprunts en retard</div>
+
+                    @if (Model.EmpruntsEnRetard.Any())
+                    {
+                        @foreach (var item in Model.EmpruntsEnRetard)
+                        {
+                            <div class="alert-box-danger">
+                                <div class="alert-student">@item.NomEtudiant</div>
+                                <div class="alert-book">@item.TitreLivre</div>
+                                <div class="alert-date-danger">
+                                    Devait être rendu le @item.DateRemisePrevue.ToString("dd/MM/yyyy")
+                                </div>
+                                <span class="section-badge bg-danger text-white mt-2 d-inline-block">
+                                    @item.JoursRestants jour(s) de retard
+                                </span>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p class="text-muted mb-0">Aucun emprunt en retard.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

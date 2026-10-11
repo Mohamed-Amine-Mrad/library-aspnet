@@ -1,0 +1,247 @@
+﻿@model LIBRARY_PLUS.Models.Auteur
+
+@{
+    ViewData["Title"] = "Détails de l'auteur";
+}
+
+<style>
+    .details-page {
+        max-width: 850px;
+        margin: 0 auto;
+    }
+
+    .details-header {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        margin-bottom: 28px;
+    }
+
+    .back-link {
+        color: #0f172a;
+        font-size: 22px;
+        text-decoration: none;
+    }
+
+    .details-title {
+        font-size: 28px;
+        font-weight: 700;
+        color: #0f172a;
+        margin: 0;
+    }
+
+    .details-subtitle {
+        color: #64748b;
+        margin: 3px 0 0;
+    }
+
+    .details-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        overflow: hidden;
+    }
+
+    .author-hero {
+        background: linear-gradient(135deg, #213c9b, #1d4ed8);
+        color: white;
+        padding: 34px;
+        display: flex;
+        align-items: center;
+        gap: 24px;
+    }
+
+    .author-avatar {
+        width: 110px;
+        height: 110px;
+        border-radius: 20px;
+        background: rgba(255,255,255,0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 42px;
+    }
+
+    .author-fullname {
+        font-size: 34px;
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    .author-role {
+        font-size: 17px;
+        opacity: 0.92;
+    }
+
+    .details-body {
+        padding: 34px;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+    }
+
+    .info-item {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 22px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .info-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+    }
+
+    .icon-name {
+        background: #eef2ff;
+        color: #4f46e5;
+    }
+
+    .icon-firstname {
+        background: #ecfeff;
+        color: #0891b2;
+    }
+
+    .info-label {
+        color: #64748b;
+        font-size: 14px;
+        margin-bottom: 4px;
+    }
+
+    .info-value {
+        color: #0f172a;
+        font-size: 18px;
+        font-weight: 600;
+    }
+
+    .details-divider {
+        border-top: 1px solid #e2e8f0;
+        margin: 32px 0 28px;
+    }
+
+    .details-actions {
+        display: flex;
+        gap: 16px;
+    }
+
+    .btn-edit {
+        background: #213c9b;
+        color: white;
+        text-decoration: none;
+        padding: 14px 26px;
+        border-radius: 10px;
+        font-weight: 700;
+    }
+
+        .btn-edit:hover {
+            background: #1d3588;
+            color: white;
+        }
+
+    .btn-back {
+        background: white;
+        color: #0f172a;
+        text-decoration: none;
+        padding: 14px 26px;
+        border-radius: 10px;
+        border: 1px solid #dbe2ea;
+        font-weight: 600;
+    }
+
+        .btn-back:hover {
+            background: #f8fafc;
+            color: #0f172a;
+        }
+</style>
+
+<div class="details-page">
+
+    <div class="details-header">
+        <a asp-action="Index" class="back-link">
+            <i class="fa-solid fa-arrow-left"></i>
+        </a>
+
+        <div>
+            <h1 class="details-title">Détails de l'auteur</h1>
+            <p class="details-subtitle">Informations complètes</p>
+        </div>
+    </div>
+
+    <div class="details-card">
+
+        <div class="author-hero">
+            <div class="author-avatar">
+                <i class="fa-solid fa-user-pen"></i>
+            </div>
+
+            <div>
+                <div class="author-fullname">
+                    @Model.Prenom @Model.Nom
+                </div>
+
+                <div class="author-role">
+                    Auteur enregistré dans la bibliothèque
+                </div>
+            </div>
+        </div>
+
+        <div class="details-body">
+
+            <div class="info-grid">
+
+                <div class="info-item">
+                    <div class="info-icon icon-name">
+                        <i class="fa-solid fa-signature"></i>
+                    </div>
+
+                    <div>
+                        <div class="info-label">Nom</div>
+                        <div class="info-value">@Model.Nom</div>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-icon icon-firstname">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+
+                    <div>
+                        <div class="info-label">Prénom</div>
+                        <div class="info-value">@Model.Prenom</div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="details-divider"></div>
+
+            <div class="details-actions">
+
+                <a asp-action="Edit"
+                   asp-route-id="@Model.IdAuteur"
+                   class="btn-edit">
+                    Modifier cet auteur
+                </a>
+
+                <a asp-action="Index"
+                   class="btn-back">
+                    Retour à la liste
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

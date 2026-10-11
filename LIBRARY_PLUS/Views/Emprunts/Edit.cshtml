@@ -1,0 +1,229 @@
+﻿@model LIBRARY_PLUS.Models.Emprunt
+
+@{
+    ViewData["Title"] = "Modifier un emprunt";
+}
+
+<style>
+    .emprunt-form-page {
+        max-width: 1100px;
+        margin: auto;
+    }
+
+    .emprunt-form-header {
+        display: flex;
+        align-items: flex-start;
+        gap: 18px;
+        margin-bottom: 30px;
+    }
+
+    .back-btn {
+        width: 42px;
+        height: 42px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #0f172a;
+        text-decoration: none;
+        font-size: 20px;
+    }
+
+    .emprunt-form-header h1 {
+        font-size: 42px;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 4px;
+    }
+
+    .emprunt-form-header p {
+        color: #64748b;
+        font-size: 18px;
+        margin: 0;
+    }
+
+    .emprunt-form-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 18px;
+        padding: 42px;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 28px;
+    }
+
+    .emprunt-form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+        .emprunt-form-group label {
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+        .emprunt-form-group input,
+        .emprunt-form-group select {
+            height: 58px;
+            border: 1px solid #dbe2ea;
+            border-radius: 12px;
+            padding: 0 18px;
+            font-size: 16px;
+            color: #334155;
+            background: white;
+        }
+
+            .emprunt-form-group input:focus,
+            .emprunt-form-group select:focus {
+                outline: none;
+                border-color: #213c9b;
+                box-shadow: 0 0 0 4px rgba(33,60,155,0.08);
+            }
+
+    .small-note {
+        color: #64748b;
+        margin-top: 8px;
+        font-size: 13px;
+    }
+
+    .emprunt-actions {
+        display: flex;
+        gap: 18px;
+        margin-top: 40px;
+        padding-top: 30px;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    .btn-save-emprunt {
+        height: 56px;
+        padding: 0 28px;
+        border: none;
+        border-radius: 12px;
+        background: #213c9b;
+        color: white;
+        font-size: 16px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+        .btn-save-emprunt:hover {
+            background: #1d3588;
+        }
+
+    .btn-cancel-emprunt {
+        height: 56px;
+        padding: 0 28px;
+        border-radius: 12px;
+        border: 1px solid #dbe2ea;
+        background: white;
+        color: #334155;
+        text-decoration: none;
+        font-size: 16px;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .text-danger {
+        margin-top: 6px;
+        font-size: 14px;
+    }
+</style>
+
+<div class="emprunt-form-page">
+
+    <div class="emprunt-form-header">
+        <a asp-action="Index" class="back-btn">
+            <i class="fa-solid fa-arrow-left"></i>
+        </a>
+
+        <div>
+            <h1>Modifier un emprunt</h1>
+            <p>Modifiez les informations de l'emprunt</p>
+        </div>
+    </div>
+
+    <div class="emprunt-form-card">
+        <form asp-action="Edit" method="post">
+
+            <input type="hidden" asp-for="IdEmprunt" />
+
+            <div asp-validation-summary="All" class="text-danger mb-4"></div>
+
+            <div class="form-grid">
+
+                <div class="emprunt-form-group">
+                    <label asp-for="IdEtudiant">Étudiant *</label>
+                    <select asp-for="IdEtudiant" asp-items="ViewBag.IdEtudiant">
+                        <option value="">-- Sélectionner un étudiant --</option>
+                    </select>
+                    <span asp-validation-for="IdEtudiant" class="text-danger"></span>
+                </div>
+
+                <div class="emprunt-form-group">
+                    <label asp-for="IdLivre">Livre *</label>
+                    <select asp-for="IdLivre" asp-items="ViewBag.IdLivre">
+                        <option value="">-- Sélectionner un livre disponible --</option>
+                    </select>
+                    <span asp-validation-for="IdLivre" class="text-danger"></span>
+                </div>
+
+                <div class="emprunt-form-group">
+                    <label asp-for="DateEmprunt">Date d'emprunt *</label>
+                    <input asp-for="DateEmprunt" type="date" />
+                    <span asp-validation-for="DateEmprunt" class="text-danger"></span>
+                </div>
+
+                <div class="emprunt-form-group">
+                    <label asp-for="DateRemisePrevue">Date de remise prévue *</label>
+                    <input asp-for="DateRemisePrevue" type="date" />
+                    <span asp-validation-for="DateRemisePrevue" class="text-danger"></span>
+                </div>
+
+                <div class="emprunt-form-group">
+                    <label asp-for="DateRemiseEffective">Date de remise effective</label>
+                    <input asp-for="DateRemiseEffective" type="date" />
+                    <span asp-validation-for="DateRemiseEffective" class="text-danger"></span>
+                    <span class="small-note">
+                        Remplis ce champ lorsque le livre est retourné.
+                    </span>
+                </div>
+
+                <div class="emprunt-form-group">
+                    <label asp-for="IdReservation">Réservation liée</label>
+                    <select asp-for="IdReservation" asp-items="ViewBag.IdReservation">
+                        <option value="">-- Aucune réservation --</option>
+                    </select>
+                    <span asp-validation-for="IdReservation" class="text-danger"></span>
+                </div>
+
+            </div>
+
+            <div class="emprunt-actions">
+                <button type="submit" class="btn-save-emprunt">
+                    <i class="fa-regular fa-floppy-disk"></i>
+                    Enregistrer
+                </button>
+
+                <a asp-action="Index" class="btn-cancel-emprunt">
+                    Annuler
+                </a>
+            </div>
+
+        </form>
+    </div>
+
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

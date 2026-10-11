@@ -1,0 +1,320 @@
+﻿@model LIBRARY_PLUS.Models.Etudiant
+
+@{
+    ViewData["Title"] = "Supprimer un étudiant";
+
+    var scoreLabel = Model.ScoreEmprunt >= 20 ? "Excellent"
+        : Model.ScoreEmprunt >= 10 ? "Bien"
+        : Model.ScoreEmprunt > 0 ? "Moyen"
+        : "Nouveau";
+
+    var scoreClass = Model.ScoreEmprunt >= 20 ? "score-excellent"
+        : Model.ScoreEmprunt >= 10 ? "score-good"
+        : Model.ScoreEmprunt > 0 ? "score-medium"
+        : "score-low";
+}
+
+<style>
+    .delete-page {
+        max-width: 950px;
+        margin: 0 auto;
+    }
+
+    .delete-header {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        margin-bottom: 28px;
+    }
+
+    .back-link {
+        color: #0f172a;
+        font-size: 22px;
+        text-decoration: none;
+    }
+
+    .delete-title {
+        font-size: 30px;
+        font-weight: 700;
+        color: #0f172a;
+        margin: 0;
+    }
+
+    .delete-subtitle {
+        color: #64748b;
+        margin: 4px 0 0;
+    }
+
+    .delete-card {
+        background: white;
+        border: 1px solid #fecaca;
+        border-radius: 18px;
+        overflow: hidden;
+    }
+
+    .warning-box {
+        background: #fef2f2;
+        padding: 30px;
+        border-bottom: 1px solid #fecaca;
+        display: flex;
+        gap: 18px;
+        align-items: center;
+    }
+
+    .warning-icon {
+        width: 58px;
+        height: 58px;
+        border-radius: 16px;
+        background: #fee2e2;
+        color: #dc2626;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+    }
+
+    .warning-title {
+        font-size: 24px;
+        font-weight: 700;
+        color: #991b1b;
+        margin-bottom: 4px;
+    }
+
+    .warning-text {
+        color: #7f1d1d;
+        margin: 0;
+    }
+
+    .student-section {
+        padding: 34px;
+    }
+
+    .student-top {
+        display: flex;
+        align-items: center;
+        gap: 22px;
+        margin-bottom: 34px;
+    }
+
+    .student-avatar {
+        width: 96px;
+        height: 96px;
+        border-radius: 24px;
+        background: linear-gradient(135deg, #213c9b, #1d4ed8);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 36px;
+    }
+
+    .student-name {
+        font-size: 32px;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 8px;
+    }
+
+    .student-email {
+        color: #64748b;
+        font-size: 16px;
+        margin-bottom: 12px;
+    }
+
+    .score-badge {
+        display: inline-block;
+        padding: 7px 14px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .score-excellent {
+        background: #dcfce7;
+        color: #15803d;
+    }
+
+    .score-good {
+        background: #dbeafe;
+        color: #2563eb;
+    }
+
+    .score-medium {
+        background: #fef3c7;
+        color: #d97706;
+    }
+
+    .score-low {
+        background: #fee2e2;
+        color: #dc2626;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 22px;
+    }
+
+    .info-item {
+        background: #f8fafc;
+        border-radius: 14px;
+        padding: 22px;
+    }
+
+    .info-label {
+        color: #64748b;
+        font-size: 14px;
+        margin-bottom: 8px;
+    }
+
+    .info-value {
+        color: #0f172a;
+        font-size: 17px;
+        font-weight: 600;
+    }
+
+    .delete-actions {
+        padding: 28px 34px;
+        border-top: 1px solid #e2e8f0;
+        display: flex;
+        gap: 16px;
+    }
+
+    .btn-delete {
+        background: #dc2626;
+        color: white;
+        border: none;
+        border-radius: 12px;
+        padding: 14px 28px;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+        .btn-delete:hover {
+            background: #b91c1c;
+        }
+
+    .btn-back {
+        background: white;
+        color: #0f172a;
+        border: 1px solid #dbe2ea;
+        border-radius: 12px;
+        padding: 14px 28px;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+        .btn-back:hover {
+            background: #f8fafc;
+            color: #0f172a;
+        }
+</style>
+
+<div class="delete-page">
+
+    <div class="delete-header">
+        <a asp-action="Index" class="back-link">
+            <i class="fa-solid fa-arrow-left"></i>
+        </a>
+
+        <div>
+            <h1 class="delete-title">Supprimer un étudiant</h1>
+            <p class="delete-subtitle">Confirmation de suppression</p>
+        </div>
+    </div>
+
+    <div class="delete-card">
+
+        <div class="warning-box">
+
+            <div class="warning-icon">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+
+            <div>
+                <div class="warning-title">
+                    Es-tu sûr de vouloir supprimer cet étudiant ?
+                </div>
+
+                <p class="warning-text">
+                    Cette action est définitive et supprimera l'étudiant du système.
+                </p>
+            </div>
+
+        </div>
+
+        <div class="student-section">
+
+            <div class="student-top">
+
+                <div class="student-avatar">
+                    <i class="fa-solid fa-user-graduate"></i>
+                </div>
+
+                <div>
+                    <div class="student-name">
+                        @Model.Prenom @Model.Nom
+                    </div>
+
+                    <div class="student-email">
+                        <i class="fa-regular fa-envelope me-2"></i>
+                        @Model.Email
+                    </div>
+
+                    <span class="score-badge @scoreClass">
+                        Score @Model.ScoreEmprunt - @scoreLabel
+                    </span>
+                </div>
+
+            </div>
+
+            <div class="info-grid">
+
+                <div class="info-item">
+                    <div class="info-label">Nom complet</div>
+                    <div class="info-value">@Model.Prenom @Model.Nom</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-label">Classe</div>
+                    <div class="info-value">@Model.Classe</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-label">Email</div>
+                    <div class="info-value">@Model.Email</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-label">Score emprunt</div>
+                    <div class="info-value">@Model.ScoreEmprunt</div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <form asp-action="Delete" method="post">
+
+            <input type="hidden" asp-for="IdEtudiant" />
+
+            <div class="delete-actions">
+
+                <button type="submit" class="btn-delete">
+                    <i class="fa-solid fa-trash-can"></i>
+                    Confirmer la suppression
+                </button>
+
+                <a asp-action="Index" class="btn-back">
+                    Retour à la liste
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
